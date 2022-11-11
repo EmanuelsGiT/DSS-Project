@@ -1,7 +1,7 @@
 # Use Case: Resultado Final
 
 ## Descrição:
-Sistema exibe resultado final do campeonato.
+Sistema exibe resultado final do campeonato e atualiza o ranking do Racing Manager.
 
 ## Cenário:
 O Francisco e três amigos (Sara, Daniela e Manuel) resolver jogar um campeonato de Racing Manager.
