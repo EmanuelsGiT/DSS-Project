@@ -17,3 +17,4 @@ O campeonato é realizado com sucesso.
 Classificação final do campeonato é exibida e adicionada ao ranking do Racing Manager, que é alterado.
 
 ## Fluxo Normal:
+1.
