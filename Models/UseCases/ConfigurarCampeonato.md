@@ -18,30 +18,21 @@ Utilizador autenticou-se como jogador e existe pelo menos um campeonato para jog
 Utilizador fica inscrito no campeonato.
 
 ## Fluxo Normal:
-1. Sistema procura campeonatos;
-2. Sistema apresenta lista de campeoantos;
-3. Jogador escolhe o campeonato que se pretende inscrever;
-4. Sistema apresenta campeonato;
-5. Sistema apresenta menu onde escolhe o carro e o piloto;
-6. Jogador escolhe escolher carro;
+1. Sistema procura e apresenta os de campeonatos; 
+2. Jogador escolhe o campeonato que se pretende inscrever;
+3. Sistema apresenta campeonato;
+4. Sistema procura e apresenta as categorias de carros disponíveis;
+5. Utilizador escolhe uma categoria;
+6. Sistema procura e apresenta os carros disponíveis;
+7. Utilizador escolhe um carro;
+8. Sistema procura e apresenta os pilotos disponíveis;
+9. Utilizador escolhe um piloto;
+10. Sistema regista a inscrição
 
-6. Sistema procura categoria de carros;
-7. Sistema apresenta categoria de carros;
-8. Utilizador escolhe uma categoria;
-9. Sistema procura carros disponíveis;
-10. Sistema apresenta carros disponíveis;
-11. Utilizador escolhe um carro;
-12. Sistema procura pilotos disponíveis;
-13. Sistema apresenta pilotos disponíveis;
-14. Utilizador escolhe um piloto; 
-15. Utilizador confirma inscrição;
-16. Sistema efetua registo da inscrição.
 
 ## Fluxo Alternativo(1) [Utilizador decide trocar de categoria]
 
-## Fluxo de Exceção(1): [Utilizador decide cancelar inscrição]
-1. Utilizador decide nao inscrever-se no campeonato.
-2. Sistema retorna ao menu principal.
+
 
 
 
