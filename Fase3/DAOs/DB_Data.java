@@ -1,4 +1,4 @@
-package org.example.data;
+package DAOs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ public class DatabaseData {
 
     private static final String DB_HOST = "localhost";
     private static final String DB_PORT = "3306";
-    private static final String DB_DATABASE = "F1Manager_dev";
+    private static final String DB_DATABASE = "F1Manager";
 
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "mysql";
