@@ -1,3 +1,4 @@
+package Models;
 import java.util.ArrayList;
 
 public class Circuito {
@@ -139,8 +140,8 @@ public class Circuito {
         sb.append("\nNúmero de chicanes: ");sb.append(this.nChicanes);
         sb.append("\nNúmero de curvas: ");sb.append(this.nCurvas);
         sb.append("\nNúmero de retas: ");sb.append(this.nRetas);
-        sb.append("\nGDU das retas:");sb.append(this.retasGDU);
-        sb.append("\nGDU das curvas:");sb.append(this.curvasGDU);
+        sb.append("\nGDU das retas:");sb.append(this.getRetasGDU());
+        sb.append("\nGDU das curvas:");sb.append(this.getCurvasGDU());
         return sb.toString();
     }
 

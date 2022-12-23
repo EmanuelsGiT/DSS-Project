@@ -1,5 +1,6 @@
+package Models;
 
-public class C2 extends Carro {
+public class C1 extends Carro {
     /**
      * Variáveis de instância
      */
@@ -9,7 +10,7 @@ public class C2 extends Carro {
     /**
      * Construtor vazio/não parameterizado
      */ 
-    public C2() {
+    public C1() {
         super();
         this.hibrido = 0;
         this.potenciaHibrido = 0;
@@ -17,40 +18,40 @@ public class C2 extends Carro {
     
     /**
      * Construtor parameterizado
-     * Não recebe fiabilidade visto que esta é sempre 80% + valor em função da cilindrada: quanto maior a cilindrada maior a fiabilidade
+     * Não recebe cilindrada visto que esta é sempre 6000cm3
+     * Não recebe fiabilidade visto que esta é sempre 95%
      * @param marca
      * @param modelo
-     * @param cilindrada
      * @param potencia
      */
-    public C2(String marca, String modelo, int cilindrada, int potencia, int hibrido, int potenciaHibrido) {
-        super(marca, modelo, cilindrada, (potencia + (hibrido*potenciaHibrido)), (0.80 + (cilindrada*0.001)));
+    public C1(String marca, String modelo, int potencia, int hibrido, int potenciaHibrido) {
+        super(marca, modelo, 6000, (potencia + (hibrido*potenciaHibrido)), 0.95);
         this.hibrido = hibrido;
         this.potenciaHibrido = potenciaHibrido;
     }
     
     /**
      * Construtor de cópia
-     * @param c2
+     * @param c1
      */
-    public C2(C2 c2) {
-        super(c2);
-        this.hibrido = c2.hibrido;
-        this.potenciaHibrido = c2.potenciaHibrido;
+    public C1(C1 c1) {
+        super(c1);
+        this.hibrido = c1.hibrido;
+        this.potenciaHibrido = c1.potenciaHibrido;
     }
     
-    public C2 clone() {
-        return new C2(this);
+    public C1 clone() {
+        return new C1(this);
     }
 
     public boolean validaCilindrada() {
-        return (this.getCilindrada()>3000 && this.getCilindrada()<5000);
+        return (this.getCilindrada() == 6000);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n - C2 -");
+        sb.append("\n - C1 -");
         sb.append(super.toString());
         sb.append("\nHíbrido: ");sb.append(this.hibrido);
         sb.append("\nPotência híbrido: ");sb.append(this.potenciaHibrido);

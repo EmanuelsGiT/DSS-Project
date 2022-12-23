@@ -1,22 +1,25 @@
-public class Anonimo extends Jogador {
-    
+package Models;
+
+public abstract class Jogador extends Utilizador {
+
     /**
      * Variáveis de instância
      */
 
-    public Anonimo() {
+    public Jogador() {
         super();
-    }
+    } 
 
-    public Anonimo(String nome) {
+    public Jogador(String nome) {
         super(nome);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n - Anonimo -");
+        sb.append("\n - Jogador -");
         sb.append(super.toString());
         return sb.toString();
     }
+    
 }

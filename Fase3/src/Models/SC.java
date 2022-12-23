@@ -1,3 +1,4 @@
+package Models;
 public class SC extends Carro {
     /**
      * Variáveis de instância
