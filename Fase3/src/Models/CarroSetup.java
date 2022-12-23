@@ -80,6 +80,10 @@ public class CarroSetup {
         return new CarroSetup(this);
     }
 
+    public boolean validaPac() {
+        return (this.pac >= 0 && this.pac <=1 );
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

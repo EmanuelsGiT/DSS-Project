@@ -57,8 +57,31 @@ public class Campeonato {
         this.registos = new HashMap<>(registos);
     }
 
+    public boolean validaAfinacao(String nomeJogador) {
+        Registo r = this.registos.get(nomeJogador);
+        int numAfinacoes = r.getNumAfinacoes();
+        
+        return (numAfinacoes <= (2/3)*this.corridas.size());
+    }
+
     public Campeonato clone() {
         return new Campeonato(this);
+    }
+
+    public void adicionarRegisto(Jogador jogador, Piloto piloto, CarroSetup carroSetup) {
+        String nomeJogador = jogador.getNome();
+        this.registos.put(nomeJogador, new Registo(0, piloto, jogador, carroSetup));
+    }
+
+    public HashMap<Registo, Integer> calculaClassificacaoFinal() {
+        // TODO
+        //iterar sobre todos os registos e calcular a pontuaçao total de cada jogador
+        HashMap<Registo, Integer> classificacaoFinal = new HashMap<>();
+        for (Registo r : this.registos.values()) {
+            Jogador jog = r.getJogador(); // verificar se está registado
+            classificacaoFinal.put(r, jog.getPontuacaoTotal()); // so existe este metodo no registado ainda n sei como fazer isto
+        }
+        return classificacaoFinal;
     }
 
     @Override

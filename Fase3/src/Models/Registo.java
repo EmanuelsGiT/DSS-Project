@@ -71,6 +71,10 @@ public class Registo {
         return new Registo(this);
     }
 
+    public void incrementaNumAfinacoes() {
+        this.numAfinacoes += 1;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
