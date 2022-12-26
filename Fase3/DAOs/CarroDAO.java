@@ -7,20 +7,19 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RaceCarDAO implements Map<Integer, Carro> {
-    private static RaceCarDAO singleton = null;
+public class CarroDAO implements Map<Integer, Carro> {
+    private static CarroDAO singleton = null;
 
-    private RaceCarDAO() {
+    private CarroDAO() {
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
-            String sql = "CREATE TABLE IF NOT EXISTS cars (" +
-                    "Id INT AUTO_INCREMENT PRIMARY KEY," +
-                    "Class CHAR(33) NOT NULL," +
-                    "Tyre VARCHAR(12) NOT NULL," +
-                    "BodyWork VARCHAR(6) NOT NULL," +
-                    "EngineMode VARCHAR(6) NOT NULL," +
-                    "EngineCapacity INT NOT NULL," +
-                    "EnginePower INT);";
+            String sql = "CREATE TABLE IF NOT EXISTS carros (" +
+                    "Marca VARCHAR(25) NOT NULL," +
+                    "Modelo VARCHAR(50) NOT NULL PRIMARY KEY," +
+                    "Cilindrada INT NOT NULL," +
+                    "Potencia INT NOT NULL," +
+                    "Fiabilidade DOUBLE NOT NULL," +
+                    "Classe CHAR(2) NOT NULL);";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
             // Erro a criar tabela...
@@ -29,11 +28,11 @@ public class RaceCarDAO implements Map<Integer, Carro> {
         }
     }
 
-    public static RaceCarDAO getInstance() {
-        if (RaceCarDAO.singleton == null) {
-            RaceCarDAO.singleton = new RaceCarDAO();
+    public static CarroDAO getInstance() {
+        if (CarroDAO.singleton == null) {
+            CarroDAO.singleton = new CarroDAO();
         }
-        return RaceCarDAO.singleton;
+        return CarroDAO.singleton;
     }
 
     @Override
@@ -41,7 +40,7 @@ public class RaceCarDAO implements Map<Integer, Carro> {
         int i = 0;
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT count(*) FROM cars")) {
+             ResultSet rs = stm.executeQuery("SELECT count(*) FROM carros")) {
             if (rs.next()) {
                 i = rs.getInt(1);
             }
@@ -62,7 +61,7 @@ public class RaceCarDAO implements Map<Integer, Carro> {
     public boolean containsKey(Object key) {
         boolean r = false;
         try (Connection conn = DataBaseData.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT Id FROM cars WHERE Id= ?;");
+             PreparedStatement ps = conn.prepareStatement("SELECT Modelo FROM carros WHERE Modelo= ?;");
         ) {
             ps.setInt(1, (int) key);
             try (ResultSet rs = ps.executeQuery();) {
@@ -81,19 +80,26 @@ public class RaceCarDAO implements Map<Integer, Carro> {
     public boolean containsValue(Object value) {
         if (!(value instanceof Carro)) return false;
         Carro p = (Carro) value;
-        return p.equals(get(p.getId()));
+        return p.equals(get(p.getModelo()));
     }
 
     @Override
     public Carro get(Object key) {
         Carro r = null;
         try (Connection conn = DataBaseData.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT Id,Class,Tyre,BodyWork,EngineMode,EngineCapacity,EnginePower FROM cars WHERE Id= ?;");
+             PreparedStatement ps = conn.prepareStatement("SELECT Marca,Modelo,Cilindrada,Potencia,Fiabilidade FROM carros WHERE Modelo= ?;");
         ) {
-            ps.setInt(1, (Integer) key);
+            ps.setString(1, key.toString());
             try (ResultSet rs = ps.executeQuery();) {
                 if (rs.next()) {
-                    int id = rs.getInt("Id");
+                    String modelo = rs.getString("Modelo");
+                    String marca = rs.getString("Marca");
+                    int cilindrada = rs.getInt("Cilindrada");
+
+
+
+
+
                     Class<? extends CarClass> cc = (Class<? extends CarClass>) Class.forName(rs.getString("Class"));
                     CarClass c = (CarClass)cc.getMethod("getInstance").invoke(null, null);
                     Tyre tyre = new Tyre(Tyre.TyreType.valueOf(rs.getString("Tyre")));

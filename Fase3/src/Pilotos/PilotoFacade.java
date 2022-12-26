@@ -15,8 +15,12 @@ public class PilotoFacade implements IPilotos {
         this.pilotos = PilotoDAO.getInstance();
     }
 
+    public void adicionarPiloto(Piloto piloto) {
+        this.pilotos.put(piloto.getNome(), piloto);
+    }
+
     public void adicionarPiloto(String nome, double cts, double sva) {
-        this.pilotos.put(nome, new Piloto(nome, sva, cts));
+        adicionarPiloto(new Piloto(nome, sva, cts));
     }
 
     public void removerPiloto(String nome) {
