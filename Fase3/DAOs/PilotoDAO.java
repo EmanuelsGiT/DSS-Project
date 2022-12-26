@@ -7,22 +7,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class DriverDAO implements Map<String, Driver> {
+public class PilotoDAO implements Map<String, Piloto> {
 
-    private static DriverDAO singleton = null;
+    private static PilotoDAO singleton = null;
 
-    private DriverDAO() {
+    private PilotoDAO() {
 
         try (Connection conn = DataBaseData.getConnection();
-             Statement stm = conn.createStatement()) {
-            String sql = "CREATE TABLE IF NOT EXISTS drivers(" +
-                                 "DriverName VARCHAR(50) NOT NULL PRIMARY KEY," +
-                                 "DriverCTS DECIMAL(10,2) NOT NULL," +
-                                 "DriverSVA DECIMAL(10,2) NOT NULL)";
+            Statement stm = conn.createStatement()) {
+            String sql = "CREATE TABLE IF NOT EXISTS pilotos(" +
+                                 "NomePiloto VARCHAR(50) NOT NULL PRIMARY KEY," +
+                                 "PilotoCTS DECIMAL(1,3) NOT NULL," +
+                                 "PilotoSVA DECIMAL(1,3) NOT NULL)";
 
             stm.executeUpdate(sql);
         } catch (SQLException error) {
-
             error.printStackTrace();
             throw new RuntimeException(error.getMessage());
 
@@ -30,10 +29,10 @@ public class DriverDAO implements Map<String, Driver> {
 
     }
 
-    public static DriverDAO getInstance() {
+    public static PilotoDAO getInstance() {
 
-        if (DriverDAO.singleton == null) DriverDAO.singleton = new DriverDAO();
-        return DriverDAO.singleton;
+        if (PilotoDAO.singleton == null) PilotoDAO.singleton = new PilotoDAO();
+        return PilotoDAO.singleton;
 
     }
 
@@ -43,7 +42,7 @@ public class DriverDAO implements Map<String, Driver> {
         int i = 0;
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT COUNT(*) FROM drivers;");){
+             ResultSet rs = stm.executeQuery("SELECT COUNT(*) FROM pilotos;");){
                 if (rs.next())
                     i = rs.getInt(1);
         } catch (SQLException e) {
@@ -61,7 +60,7 @@ public class DriverDAO implements Map<String, Driver> {
     public boolean containsKey(Object key) {
         boolean r=false;
         try (Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT DriverName FROM drivers WHERE DriverName= ?;");){
+            PreparedStatement ps = conn.prepareStatement("SELECT NomePiloto FROM pilotos WHERE NomePiloto= ?;");){
             ps.setString(1,key.toString());
             try (ResultSet rs = ps.executeQuery();){
                 if (rs.next())
@@ -76,16 +75,16 @@ public class DriverDAO implements Map<String, Driver> {
     }
 
     @Override
-    public Driver get(Object key) {
+    public Piloto get(Object key) {
         try (Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT DriverCTS,DriverSVA FROM drivers WHERE DriverName=?;");){
+            PreparedStatement ps = conn.prepareStatement("SELECT PilotoCTS,PilotoSVA FROM pilotos WHERE NomePiloto=?;");){
             ps.setString(1,key.toString());
             try(ResultSet rs = ps.executeQuery();){
                 if (rs.next())
-                    return new Driver(
+                    return new Piloto(
                             key.toString(),
-                            rs.getFloat("DriverCTS"),
-                            rs.getFloat("DriverSVA")
+                            rs.getFloat("PilotoCTS"),
+                            rs.getFloat("PilotoSVA")
                     );
             }
         } catch (SQLException e) {
@@ -98,56 +97,56 @@ public class DriverDAO implements Map<String, Driver> {
 
     @Override
     public boolean containsValue(Object value) {
-        if (!(value instanceof Driver)) return false;
-        Driver p = (Driver) value;
-        return p.equals(get(p.getDriverName()));
+        if (!(value instanceof Piloto)) return false;
+        Piloto p = (Piloto) value;
+        return p.equals(get(p.getNome()));
     }
 
 
     @Override
-    public Driver put(String key, @NotNull Driver driver) {
+    public Piloto put(String key, @NotNull Piloto piloto) {
         try (
             Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO drivers (DriverName,DriverCTS,DriverSVA) VALUES (?,?,?);");){
-            ps.setString(1,driver.getDriverName());
-            ps.setFloat(2,driver.getDriverCTS());
-            ps.setFloat(3,driver.getDriverSVA());
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO pilotos (NomePiloto,PilotoCTS,PilotoSVA) VALUES (?,?,?);");){
+            ps.setString(1,piloto.getNome());
+            ps.setDouble(2,piloto.getCTS());
+            ps.setDouble(3,piloto.getSVA());
             ps.executeUpdate();
-            return driver;
+            return piloto;
         } catch (SQLException e) {
             return null;
         }
     }
 
-    public Driver put(@NotNull Driver driver) {
-        return this.put(driver.getDriverName(),driver);
+    public Piloto put(@NotNull Piloto piloto) {
+        return this.put(piloto.getNome(), piloto);
     }
 
     @Override
-    public Driver remove(Object key) {
-        Driver driver = this.get(key);
-        if (driver==null){
+    public Piloto remove(Object key) {
+        Piloto piloto = this.get(key);
+        if (piloto==null){
             return null;
         }
         try(Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM drivers WHERE DriverName = ?;");){
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM pilotos WHERE NomePiloto = ?;");){
             ps.setString(1,key.toString());
             ps.executeUpdate();
-            return driver;
+            return piloto;
         } catch (SQLException e) {
             return null;
         }
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends Driver> m) {
+    public void putAll(Map<? extends String, ? extends Piloto> m) {
         try (Connection conn = DataBaseData.getConnection();){
             conn.setAutoCommit(false);
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO drivers (DriverName,DriverCTS,DriverSVA) VALUES (?,?,?);");) {
-                for (Entry e : m.entrySet()) {
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO pilotos (NomePiloto,PilotoCTS,PilotoSVA) VALUES (?,?,?);");) {
+                for (Entry<? extends String, ? extends Piloto> e : m.entrySet()) {
                     ps.setString(1, (String) e.getKey());
-                    ps.setFloat(2, ((Driver) e.getValue()).getDriverCTS());
-                    ps.setFloat(3, ((Driver) e.getValue()).getDriverSVA());
+                    ps.setDouble(2, ((Piloto) e.getValue()).getCTS());
+                    ps.setDouble(3, ((Piloto) e.getValue()).getSVA());
                     ps.executeUpdate();
                 }
             }
@@ -162,9 +161,9 @@ public class DriverDAO implements Map<String, Driver> {
     public void clear() {
         try (Connection conn = DataBaseData.getConnection();
             Statement stm = conn.createStatement();){
-            stm.executeUpdate("DELETE FROM drivers;");
+            stm.executeUpdate("DELETE FROM pilotos;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);//TODO MUDAR ISTO
+            throw new RuntimeException(e);
         }
     }
 
@@ -173,9 +172,9 @@ public class DriverDAO implements Map<String, Driver> {
         Set<String> r=new HashSet<String>();
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT DriverName FROM drivers;");){
+             ResultSet rs = stm.executeQuery("SELECT NomePiloto FROM pilotos;");){
                 while(rs.next())
-                    r.add(rs.getString("DriverName"));
+                    r.add(rs.getString("NomePiloto"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -183,18 +182,18 @@ public class DriverDAO implements Map<String, Driver> {
     }
 
     @Override
-    public Collection<Driver> values() {
-        Collection<Driver> r = new HashSet<Driver>();
+    public Collection<Piloto> values() {
+        Collection<Piloto> r = new HashSet<Piloto>();
         try (
             Connection conn = DataBaseData.getConnection();
             Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT DriverName,DriverCTS,DriverSVA FROM drivers;");
+            ResultSet rs = stm.executeQuery("SELECT NomePiloto,PilotoCTS,PilotoSVA FROM pilotos;");
             ){
                 while(rs.next())
-                    r.add(new Driver(
-                        rs.getString("DriverName"),
-                        rs.getFloat("DriverCTS"),
-                        rs.getFloat("DriverSVA")
+                    r.add(new Piloto(
+                        rs.getString("NomePiloto"),
+                        rs.getDouble("PilotoCTS"),
+                        rs.getDouble("PilotoSVA")
                     ));
 
         } catch (SQLException e) {
@@ -204,8 +203,8 @@ public class DriverDAO implements Map<String, Driver> {
     }
 
     @Override
-    public Set<Entry<String, Driver>> entrySet() {
+    public Set<Entry<String, Piloto>> entrySet() {
         return values().stream().collect(
-               Collectors.toMap(Driver::getDriverName, x -> x)).entrySet();
+               Collectors.toMap(Piloto::getNome, x -> x)).entrySet();
     }
 }

@@ -86,7 +86,7 @@ public class ParticipantDAO implements Map<String, Participant> {
                     return new Participant(
                         rs.getInt("NumberOfSetupChanges"),
                         RaceCarDAO.getInstance().get(rs.getInt("Car")),
-                        DriverDAO.getInstance().get(rs.getString("Driver")),
+                        PilotoDAO.getInstance().get(rs.getString("Driver")),
                         PlayerDAO.getInstance().get(rs.getString("Player"))
                         );
             }
@@ -217,7 +217,7 @@ public class ParticipantDAO implements Map<String, Participant> {
                 r.add(new Participant(
                         rs.getInt("NumberOfSetupChanges"),
                         RaceCarDAO.getInstance().get(rs.getInt("Car")),
-                        DriverDAO.getInstance().get(rs.getString("Driver")),
+                        PilotoDAO.getInstance().get(rs.getString("Driver")),
                         PlayerDAO.getInstance().get(rs.getString("Player"))
                 ));
         } catch (SQLException e) {
