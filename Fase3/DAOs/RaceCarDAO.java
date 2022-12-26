@@ -1,13 +1,13 @@
 package DAOs;
 
-import Models.cars.*;
+import Models.Carros.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
+public class RaceCarDAO implements Map<Integer, Carro> {
     private static RaceCarDAO singleton = null;
 
     private RaceCarDAO() {
@@ -79,14 +79,14 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
 
     @Override
     public boolean containsValue(Object value) {
-        if (!(value instanceof CombustionRaceCar)) return false;
-        CombustionRaceCar p = (CombustionRaceCar) value;
+        if (!(value instanceof Carro)) return false;
+        Carro p = (Carro) value;
         return p.equals(get(p.getId()));
     }
 
     @Override
-    public CombustionRaceCar get(Object key) {
-        CombustionRaceCar r = null;
+    public Carro get(Object key) {
+        Carro r = null;
         try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Id,Class,Tyre,BodyWork,EngineMode,EngineCapacity,EnginePower FROM cars WHERE Id= ?;");
         ) {
@@ -100,7 +100,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
                     BodyWork bodyWork = new BodyWork(BodyWork.DownforcePackage.valueOf(rs.getString("BodyWork")));
                     Engine.EngineMode eM = Engine.EngineMode.valueOf(rs.getString("EngineMode"));
                     CombustionEngine ce = new CombustionEngine(eM, rs.getInt("EngineCapacity"));
-                    r = new CombustionRaceCar(id, c, tyre, ce, bodyWork);
+                    r = new Carro(id, c, tyre, ce, bodyWork);
                     Integer ePow = rs.getInt("EnginePower");
                     if (!rs.wasNull()) {
                         EletricEngine ee = new EletricEngine(eM, ePow);
@@ -127,7 +127,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     }
 
     @Override
-    public CombustionRaceCar put(Integer key, CombustionRaceCar car) {
+    public Carro put(Integer key, Carro car) {
         String sql = "";
         if (key == null) {
             sql = "INSERT INTO cars (Class,Tyre,BodyWork,EngineMode,EngineCapacity,EnginePower) VALUES (?,?,?,?,?,?);";
@@ -170,7 +170,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
         }
     }
 
-    public CombustionRaceCar update(Integer key, CombustionRaceCar car) {
+    public Carro update(Integer key, Carro car) {
         String sql = "UPDATE cars SET " +
                 "Class=?," +
                 "Tyre=?," +
@@ -208,13 +208,13 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     }
 
 
-    public CombustionRaceCar put(CombustionRaceCar u) {
+    public Carro put(Carro u) {
         return put(u.getId(), u);
     }
 
     @Override
-    public CombustionRaceCar remove(Object key) {
-        CombustionRaceCar car = get(key);
+    public Carro remove(Object key) {
+        Carro car = get(key);
         if (car == null)
             return null;
         try (Connection conn = DataBaseData.getConnection();
@@ -229,7 +229,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     }
 
     @Override
-    public void putAll(Map<? extends Integer, ? extends CombustionRaceCar> m) {
+    public void putAll(Map<? extends Integer, ? extends Carro> m) {
         return;
     }
 
@@ -262,8 +262,8 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     }
 
     @Override
-    public Collection<CombustionRaceCar> values() {
-        Collection<CombustionRaceCar> r = new HashSet<CombustionRaceCar>();
+    public Collection<Carro> values() {
+        Collection<Carro> r = new HashSet<Carro>();
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT Id,Class,Tyre,BodyWork,EngineMode,EngineCapacity,EnginePower FROM cars;");
@@ -275,7 +275,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
                 BodyWork bodyWork = new BodyWork(BodyWork.DownforcePackage.valueOf(rs.getString("BodyWork")));
                 Engine.EngineMode eM = Engine.EngineMode.valueOf(rs.getString("EngineMode"));
                 CombustionEngine ce = new CombustionEngine(eM, rs.getInt("EngineCapacity"));
-                CombustionRaceCar rt = new CombustionRaceCar(id, c.newInstance(), tyre, ce, bodyWork);
+                Carro rt = new Carro(id, c.newInstance(), tyre, ce, bodyWork);
                 Integer ePow = rs.getInt("EnginePower");
                 if (!rs.wasNull()) {
                     EletricEngine ee = new EletricEngine(eM, ePow);
@@ -290,9 +290,9 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     }
 
     @Override
-    public Set<Entry<Integer, CombustionRaceCar>> entrySet() {
+    public Set<Entry<Integer, Carro>> entrySet() {
         return values().stream().collect(
-                Collectors.toMap(CombustionRaceCar::getId, x -> x)).entrySet();
+                Collectors.toMap(Carro::getId, x -> x)).entrySet();
     }
 
 
