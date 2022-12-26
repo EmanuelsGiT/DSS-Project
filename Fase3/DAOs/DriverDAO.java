@@ -1,6 +1,6 @@
 package DAOs;
 
-import business.drivers.Driver;
+import Models.Piloto;
 
 import java.sql.*;
 import java.util.*;
@@ -13,7 +13,7 @@ public class DriverDAO implements Map<String, Driver> {
 
     private DriverDAO() {
 
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS drivers(" +
                                  "DriverName VARCHAR(50) NOT NULL PRIMARY KEY," +
@@ -41,7 +41,7 @@ public class DriverDAO implements Map<String, Driver> {
     @Override
     public int size() {
         int i = 0;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT COUNT(*) FROM drivers;");){
                 if (rs.next())
@@ -60,7 +60,7 @@ public class DriverDAO implements Map<String, Driver> {
     @Override
     public boolean containsKey(Object key) {
         boolean r=false;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("SELECT DriverName FROM drivers WHERE DriverName= ?;");){
             ps.setString(1,key.toString());
             try (ResultSet rs = ps.executeQuery();){
@@ -77,7 +77,7 @@ public class DriverDAO implements Map<String, Driver> {
 
     @Override
     public Driver get(Object key) {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("SELECT DriverCTS,DriverSVA FROM drivers WHERE DriverName=?;");){
             ps.setString(1,key.toString());
             try(ResultSet rs = ps.executeQuery();){
@@ -107,7 +107,7 @@ public class DriverDAO implements Map<String, Driver> {
     @Override
     public Driver put(String key, @NotNull Driver driver) {
         try (
-            Connection conn = DatabaseData.getConnection();
+            Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("INSERT INTO drivers (DriverName,DriverCTS,DriverSVA) VALUES (?,?,?);");){
             ps.setString(1,driver.getDriverName());
             ps.setFloat(2,driver.getDriverCTS());
@@ -129,7 +129,7 @@ public class DriverDAO implements Map<String, Driver> {
         if (driver==null){
             return null;
         }
-        try(Connection conn = DatabaseData.getConnection();
+        try(Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("DELETE FROM drivers WHERE DriverName = ?;");){
             ps.setString(1,key.toString());
             ps.executeUpdate();
@@ -141,7 +141,7 @@ public class DriverDAO implements Map<String, Driver> {
 
     @Override
     public void putAll(Map<? extends String, ? extends Driver> m) {
-        try (Connection conn = DatabaseData.getConnection();){
+        try (Connection conn = DataBaseData.getConnection();){
             conn.setAutoCommit(false);
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO drivers (DriverName,DriverCTS,DriverSVA) VALUES (?,?,?);");) {
                 for (Entry e : m.entrySet()) {
@@ -160,7 +160,7 @@ public class DriverDAO implements Map<String, Driver> {
 
     @Override
     public void clear() {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
             Statement stm = conn.createStatement();){
             stm.executeUpdate("DELETE FROM drivers;");
         } catch (SQLException e) {
@@ -171,7 +171,7 @@ public class DriverDAO implements Map<String, Driver> {
     @Override
     public Set<String> keySet() {
         Set<String> r=new HashSet<String>();
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT DriverName FROM drivers;");){
                 while(rs.next())
@@ -186,7 +186,7 @@ public class DriverDAO implements Map<String, Driver> {
     public Collection<Driver> values() {
         Collection<Driver> r = new HashSet<Driver>();
         try (
-            Connection conn = DatabaseData.getConnection();
+            Connection conn = DataBaseData.getConnection();
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("SELECT DriverName,DriverCTS,DriverSVA FROM drivers;");
             ){

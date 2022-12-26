@@ -1,11 +1,10 @@
 package DAOs;
 
-import business.circuit.Circuit;
-import business.circuit.CircuitSection;
+import Models.Circuito;
 
 import java.util.*;
 
-public class CircuitDAO implements Map<String , Circuit> {
+public class CircuitDAO implements Map<String , Circuito> {
 
     private static CircuitDAO singleton = null;
 
@@ -16,122 +15,122 @@ public class CircuitDAO implements Map<String , Circuit> {
 
     }
 
-    private Map<String,Circuit> circuits=Map.of(
-            "Monza",new Circuit("Monza",5.793F,53, new ArrayList<CircuitSection>(Arrays.asList(
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.75F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CHICANE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.2F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.5F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CHICANE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.05F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.6F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.8F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F)
+    private Map<String,Circuito> Circuitos=Map.of(
+            "Monza",new Circuito("Monza",5.793F,53, new ArrayList<CircuitoSection>(Arrays.asList(
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.75F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CHICANE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.2F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.5F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CHICANE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.05F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.6F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.8F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F)
             ))),
-            "SPA",new Circuit("SPA",7.004F,44,new ArrayList<CircuitSection>(Arrays.asList(
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.5F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.2F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.2F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.5F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.05F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.6F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.8F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CURVE, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.STRAIGHT, 0.15F),
-                    new CircuitSection(CircuitSection.CircuitSectionType.CHICANE,0.2F)
+            "SPA",new Circuito("SPA",7.004F,44,new ArrayList<CircuitoSection>(Arrays.asList(
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.5F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.2F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.2F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.5F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.05F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.6F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.8F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CURVE, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.STRAIGHT, 0.15F),
+                    new CircuitoSection(CircuitoSection.CircuitoSectionType.CHICANE,0.2F)
             )))
     );
 
     @Override
     public int size() {
-        return circuits.size();
+        return Circuitos.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return circuits.isEmpty();
+        return Circuitos.isEmpty();
     }
 
     @Override
     public boolean containsKey(Object key) {
-        return circuits.containsKey(key);
+        return Circuitos.containsKey(key);
     }
 
     @Override
     public boolean containsValue(Object value) {
-        return circuits.containsValue(value);
+        return Circuitos.containsValue(value);
     }
 
     @Override
-    public Circuit get(Object key) {
-        return circuits.get(key);
+    public Circuito get(Object key) {
+        return Circuitos.get(key);
     }
 
     @Nullable
     @Override
-    public Circuit put(String key, Circuit value) {
-        return circuits.put(key, value);
+    public Circuito put(String key, Circuito value) {
+        return Circuitos.put(key, value);
     }
 
     @Override
-    public Circuit remove(Object key) {
-        return circuits.remove(key);
+    public Circuito remove(Object key) {
+        return Circuitos.remove(key);
     }
 
     @Override
-    public void putAll(@NotNull Map<? extends String, ? extends Circuit> m) {
-        circuits.putAll(m);
+    public void putAll(@NotNull Map<? extends String, ? extends Circuito> m) {
+        Circuitos.putAll(m);
     }
 
     @Override
     public void clear() {
-        circuits.clear();
+        Circuitos.clear();
     }
 
     @NotNull
     @Override
     public Set<String> keySet() {
-        return circuits.keySet();
+        return Circuitos.keySet();
     }
 
     @NotNull
     @Override
-    public Collection<Circuit> values() {
-        return circuits.values();
+    public Collection<Circuito> values() {
+        return Circuitos.values();
     }
 
     @NotNull
     @Override
-    public Set<Entry<String, Circuit>> entrySet() {
-        return circuits.entrySet();
+    public Set<Entry<String, Circuito>> entrySet() {
+        return Circuitos.entrySet();
     }
 }

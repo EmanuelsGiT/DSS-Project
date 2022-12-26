@@ -1,19 +1,18 @@
 package DAOs;
 
-import business.Race;
-import business.Weather;
-import business.participants.Participant;
+import Models.Corrida;
+//import Models.participants.Participant;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RaceDAO implements Map<Integer, Race> {
+public class RaceDAO implements Map<Integer, Corrida> {
 
     private static RaceDAO singleton = null;
 
     private RaceDAO() {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS races (" +
                     "Id INT AUTO_INCREMENT PRIMARY KEY," +
@@ -59,7 +58,7 @@ public class RaceDAO implements Map<Integer, Race> {
     @Override
     public int size() {
         int i = 0;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT count(*) FROM races;")) {
             if (rs.next())
@@ -82,7 +81,7 @@ public class RaceDAO implements Map<Integer, Race> {
         if (!(Integer.class.isInstance(key)))
             return false;
         boolean r=false;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Id FROM races WHERE Id= ?;");){
             ps.setInt(1,(Integer)key);
             try (ResultSet rs = ps.executeQuery();) {
@@ -99,7 +98,7 @@ public class RaceDAO implements Map<Integer, Race> {
 
     public List<Participant> participants(Integer key){
         List<Participant> res = new ArrayList<>();
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
         PreparedStatement ps = conn.prepareStatement("SELECT Participant FROM raceResults WHERE Id= ? ORDER BY Position ASC;");){
             ps.setInt(1,key);
             try (ResultSet rs = ps.executeQuery();) {
@@ -116,7 +115,7 @@ public class RaceDAO implements Map<Integer, Race> {
     }
     public Map<Participant,Boolean> ready(Integer key){
         Map<Participant,Boolean> res = new HashMap<>();
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Participant,Ready FROM raceReady WHERE Id= ?;");){
             ps.setInt(1,key);
             try (ResultSet rs = ps.executeQuery();) {
@@ -136,7 +135,7 @@ public class RaceDAO implements Map<Integer, Race> {
     public Race get(Object key) {
         if (!(Integer.class.isInstance(key)))
             return null;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Id,AdminHosting,WeatherVariability,Circuit,Finished FROM races WHERE Id= ?;");){
             ps.setInt(1,(Integer)key);
             try (ResultSet rs = ps.executeQuery();){
@@ -176,7 +175,7 @@ public class RaceDAO implements Map<Integer, Race> {
         else
             sql = "INSERT INTO races (Id,AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?,?);";
 
-        try (Connection conn = DatabaseData.getConnection();) {
+        try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
             try (
                     PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -243,7 +242,7 @@ public class RaceDAO implements Map<Integer, Race> {
         if (race.getId()==null)
                 return null;
         try (
-                Connection conn = DatabaseData.getConnection();){
+                Connection conn = DataBaseData.getConnection();){
             conn.setAutoCommit(false);
             try(PreparedStatement ps = conn.prepareStatement("UPDATE races SET AdminHosting=?,WeatherVariability=?,Circuit=?,Finished=? WHERE Id=?;");){
                 ps.setString(1,race.getAdminHosting().getUsername());
@@ -296,7 +295,7 @@ public class RaceDAO implements Map<Integer, Race> {
         if (value==null)
             return null;
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 PreparedStatement ps = conn.prepareStatement("DELETE FROM races WHERE Id = ?;");
         ){
             ps.setInt(1,(Integer)key);
@@ -309,7 +308,7 @@ public class RaceDAO implements Map<Integer, Race> {
 
     @Override
     public void putAll(Map<? extends Integer, ? extends Race> m) {
-        try (Connection conn = DatabaseData.getConnection();) {
+        try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
             for (Entry<? extends Integer, ? extends Race> en:m.entrySet()) {
                 Integer key = en.getKey();
@@ -371,7 +370,7 @@ public class RaceDAO implements Map<Integer, Race> {
 
     @Override
     public void clear() {
-        try ( Connection conn = DatabaseData.getConnection();
+        try ( Connection conn = DataBaseData.getConnection();
               Statement stm = conn.createStatement();){
             stm.executeUpdate("DELETE FROM races;");
         } catch (SQLException e) {
@@ -382,7 +381,7 @@ public class RaceDAO implements Map<Integer, Race> {
     public Set<Integer> keySet() {
         Set<Integer> r=new HashSet<Integer>();
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();
                 ResultSet rs = stm.executeQuery("SELECT Id FROM races;");
         ){
@@ -398,7 +397,7 @@ public class RaceDAO implements Map<Integer, Race> {
     public Collection<Race> values() {
         Collection<Race> r = new HashSet<Race>();
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();
                 ResultSet rs = stm.executeQuery("SELECT Id,AdminHosting,WeatherVariability,Circuit,Finished FROM races;");
         ){

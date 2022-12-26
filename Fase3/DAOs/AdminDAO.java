@@ -1,17 +1,17 @@
 package DAOs;
 
-import business.users.Admin;
+import Models.Administrador;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AdminDAO implements Map<String,Admin> {
+public class AdminDAO implements Map<String,Administrador> {
     private static AdminDAO singleton = null;
 
     private AdminDAO() {
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();
         ) {
             String sql = "CREATE TABLE IF NOT EXISTS users (" +
@@ -36,7 +36,7 @@ public class AdminDAO implements Map<String,Admin> {
     @Override
     public int size() {
         int i = 0;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT count(*) FROM users WHERE Premium IS NOT NULL")
         ) {
@@ -59,7 +59,7 @@ public class AdminDAO implements Map<String,Admin> {
     @Override
     public boolean containsKey(Object key) {
         boolean r = false;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Username FROM users WHERE Username= ? AND Premium IS NOT NULL;");) {
             ps.setString(1, key.toString());
             try (ResultSet rs = ps.executeQuery();) {
@@ -76,24 +76,20 @@ public class AdminDAO implements Map<String,Admin> {
 
     @Override
     public boolean containsValue(Object value) {
-        if (!(value instanceof Admin)) return false;
-        Admin p = (Admin) value;
+        if (!(value instanceof Administrador)) return false;
+        Administrador p = (Administrador) value;
         return p.equals(get(p.getUsername()));
     }
 
     @Override
-    public Admin get(Object key) {
-        try (Connection conn = DatabaseData.getConnection();
+    public Administrador get(Object key) {
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Username,Password,Premium FROM users WHERE Username= ? AND Premium IS NOT NULL;");) {
 
             ps.setString(1, key.toString());
             try (ResultSet rs = ps.executeQuery();) {
                 if (rs.next())
-                    return new Admin(
-                            rs.getString(1),
-                            rs.getString(2),
-                            rs.getBoolean(3)
-                    );
+                    return new Administrador(rs.getString(1),rs.getString(2),rs.getBoolean(3));
             }
         } catch (SQLException ignored) {
         }
@@ -101,29 +97,29 @@ public class AdminDAO implements Map<String,Admin> {
     }
 
     @Override
-    public Admin put(String key, Admin admin) {
+    public Administrador put(String key, Administrador Administrador) {
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO users (Username,Password,Premium) VALUES (?,?,?);");) {
-            ps.setString(1, admin.getUsername());
-            ps.setString(2, admin.getHashedPassword());
-            ps.setBoolean(3, admin.getPremium());
+            ps.setString(1, Administrador.getUsername());
+            ps.setString(2, Administrador.getHashedPassword());
+            ps.setBoolean(3, Administrador.getPremium());
             ps.executeUpdate();
-            return admin;
+            return Administrador;
         } catch (SQLException e) {
             return null;
         }
     }
 
-    public Admin put(Admin u) {
+    public Administrador put(Administrador u) {
         return put(u.getUsername(), u);
     }
 
     @Override
-    public Admin remove(Object key) {
-        Admin user = this.get(key);
+    public Administrador remove(Object key) {
+        Administrador user = this.get(key);
         if (user == null) return null;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM users WHERE Username = ? AND Premium IS NOT NULL;");) {
             ps.setString(1, key.toString());
             ps.executeUpdate();
@@ -134,14 +130,14 @@ public class AdminDAO implements Map<String,Admin> {
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends Admin> m) {
-        try (Connection conn = DatabaseData.getConnection();) {
+    public void putAll(Map<? extends String, ? extends Administrador> m) {
+        try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
             try (PreparedStatement stm = conn.prepareStatement("INSERT INTO users (Username,Password,Premium) VALUES (?,?,?);");) {
                 for (Entry e : m.entrySet()) {
                     stm.setString(1, (String) e.getKey());
-                    stm.setString(2, ((Admin) e.getValue()).getHashedPassword());
-                    stm.setBoolean(3, ((Admin) e.getValue()).getPremium());
+                    stm.setString(2, ((Administrador) e.getValue()).getHashedPassword());
+                    stm.setBoolean(3, ((Administrador) e.getValue()).getPremium());
                     stm.executeUpdate();
                 }
             }
@@ -156,7 +152,7 @@ public class AdminDAO implements Map<String,Admin> {
     @Override
     public void clear() {
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();) {
             stm.executeUpdate("DELETE FROM users WHERE Premium IS NOT NULL;");
         } catch (SQLException e) {
@@ -168,7 +164,7 @@ public class AdminDAO implements Map<String,Admin> {
     public Set<String> keySet() {
         Set<String> r = new HashSet<String>();
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();
                 ResultSet rs = stm.executeQuery("SELECT Username FROM users WHERE Premium IS NOT NULL;");
         ) {
@@ -183,18 +179,15 @@ public class AdminDAO implements Map<String,Admin> {
     }
 
     @Override
-    public Collection<Admin> values() {
-        Collection<Admin> r = new HashSet<Admin>();
+    public Collection<Administrador> values() {
+        Collection<Administrador> r = new HashSet<Administrador>();
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();
                 ResultSet rs = stm.executeQuery("SELECT Username,Password,Premium FROM users WHERE Premium IS NOT NULL;");
         ) {
             while (rs.next())
-                r.add(new Admin(rs.getString("Username"),
-                        rs.getString("Password"),
-                        rs.getBoolean("Premium")
-                ));
+                r.add(new Administrador(rs.getString("Username"),rs.getString("Password"),rs.getBoolean("Premium")));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -202,8 +195,8 @@ public class AdminDAO implements Map<String,Admin> {
     }
 
     @Override
-    public Set<Entry<String, Admin>> entrySet() {
+    public Set<Entry<String, Administrador>> entrySet() {
         return values().stream().collect(
-                Collectors.toMap(Admin::getUsername, x -> x)).entrySet();
+                Collectors.toMap(Administrador::getUsername, x -> x)).entrySet();
     }
 }

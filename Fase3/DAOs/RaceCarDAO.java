@@ -1,6 +1,6 @@
 package DAOs;
 
-import business.cars.*;
+import Models.cars.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -11,7 +11,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     private static RaceCarDAO singleton = null;
 
     private RaceCarDAO() {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS cars (" +
                     "Id INT AUTO_INCREMENT PRIMARY KEY," +
@@ -39,7 +39,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     @Override
     public int size() {
         int i = 0;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT count(*) FROM cars")) {
             if (rs.next()) {
@@ -61,7 +61,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     @Override
     public boolean containsKey(Object key) {
         boolean r = false;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Id FROM cars WHERE Id= ?;");
         ) {
             ps.setInt(1, (int) key);
@@ -87,7 +87,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     @Override
     public CombustionRaceCar get(Object key) {
         CombustionRaceCar r = null;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Id,Class,Tyre,BodyWork,EngineMode,EngineCapacity,EnginePower FROM cars WHERE Id= ?;");
         ) {
             ps.setInt(1, (Integer) key);
@@ -134,7 +134,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
         } else {
             sql = "INSERT INTO cars (Id,Class,Tyre,BodyWork,EngineMode,EngineCapacity,EnginePower) VALUES (?,?,?,?,?,?,?);";
         }
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ) {
             int n = 1;
@@ -180,7 +180,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
                 "EnginePower=? " +
                 "WHERE Id=?;";
 
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
         ) {
 
@@ -217,7 +217,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
         CombustionRaceCar car = get(key);
         if (car == null)
             return null;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM cars WHERE Id = ?;");
         ) {
             ps.setInt(1, (int) key);
@@ -235,7 +235,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
 
     @Override
     public void clear() {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
         ) {
             stm.executeUpdate("DELETE FROM cars;");
@@ -247,7 +247,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     @Override
     public Set<Integer> keySet() {
         Set<Integer> r = new HashSet<>();
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT Id FROM cars;");
         ) {
@@ -264,7 +264,7 @@ public class RaceCarDAO implements Map<Integer, CombustionRaceCar> {
     @Override
     public Collection<CombustionRaceCar> values() {
         Collection<CombustionRaceCar> r = new HashSet<CombustionRaceCar>();
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT Id,Class,Tyre,BodyWork,EngineMode,EngineCapacity,EnginePower FROM cars;");
         ) {

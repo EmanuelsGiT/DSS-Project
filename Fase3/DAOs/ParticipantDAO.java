@@ -1,6 +1,6 @@
 package DAOs;
 
-import business.participants.Participant;
+import Models.participants.Participant;
 
 import java.sql.*;
 import java.util.*;
@@ -11,7 +11,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     private static ParticipantDAO singleton = null;
 
     private ParticipantDAO() {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS participants (" +
                     "Player VARCHAR(255) NOT NULL PRIMARY KEY," +
@@ -40,7 +40,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     @Override
     public int size() {
         int i = 0;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT count(*) FROM participants;")) {
             if (rs.next())
@@ -61,7 +61,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     @Override
     public boolean containsKey(Object key) {
         boolean r=false;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("SELECT Player FROM participants WHERE Player= ?;");){
             ps.setString(1,key.toString());
             try (ResultSet rs = ps.executeQuery();) {
@@ -78,7 +78,7 @@ public class ParticipantDAO implements Map<String, Participant> {
 
     @Override
     public Participant get(Object key) {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("SELECT Player,Car,Driver,NumberOfSetupChanges FROM participants WHERE Player= ?;");){
             ps.setString(1,(String)key);
             try (ResultSet rs = ps.executeQuery();){
@@ -108,7 +108,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     @Override
     public Participant put(String key, Participant part) {
         try (
-            Connection conn = DatabaseData.getConnection();
+            Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("INSERT INTO participants (Player,Car,Driver,NumberOfSetupChanges) VALUES (?,?,?,?);");
             ){
             ps.setString(1, key);
@@ -128,7 +128,7 @@ public class ParticipantDAO implements Map<String, Participant> {
 
     public Participant update(Participant part) {
         try (
-            Connection conn = DatabaseData.getConnection();
+            Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("UPDATE participants SET Car=?,Driver=?,NumberOfSetupChanges=? WHERE Player=?;");
             ){
             ps.setInt(1,part.getCar().getId());
@@ -148,7 +148,7 @@ public class ParticipantDAO implements Map<String, Participant> {
         if (value==null)
             return null;
         try (
-            Connection conn = DatabaseData.getConnection();
+            Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("DELETE FROM participants WHERE Player = ?;");
             ){
             ps.setString(1,(key.toString()));
@@ -161,7 +161,7 @@ public class ParticipantDAO implements Map<String, Participant> {
 
     @Override
     public void putAll(Map<? extends String, ? extends Participant> m) {
-        try (Connection conn = DatabaseData.getConnection();){
+        try (Connection conn = DataBaseData.getConnection();){
             conn.setAutoCommit(false);
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO participants (Player,Car,Driver,NumberOfSetupChanges) VALUES (?,?,?,?);");) {
                 for (Map.Entry e : m.entrySet()) {
@@ -181,7 +181,7 @@ public class ParticipantDAO implements Map<String, Participant> {
 
     @Override
     public void clear() {
-        try ( Connection conn = DatabaseData.getConnection();
+        try ( Connection conn = DataBaseData.getConnection();
               Statement stm = conn.createStatement();){
             stm.executeUpdate("DELETE FROM participants;");
         } catch (SQLException e) {
@@ -193,7 +193,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     public Set<String> keySet() {
         Set<String> r=new HashSet<String>();
         try (
-            Connection conn = DatabaseData.getConnection();
+            Connection conn = DataBaseData.getConnection();
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("SELECT Player FROM participants;");
             ){
@@ -209,7 +209,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     public Collection<Participant> values() {
         Collection<Participant> r = new HashSet<Participant>();
         try (
-            Connection conn = DatabaseData.getConnection();
+            Connection conn = DataBaseData.getConnection();
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("SELECT Player,Car,Driver,NumberOfSetupChanges FROM participants;");
             ){

@@ -1,17 +1,17 @@
 package DAOs;
 
-import business.users.Player;
-import business.users.User;
+import Models.Utilizador;
+import Models.Jogador;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PlayerDAO implements Map<String, Player> {
+public class PlayerDAO implements Map<String, Jogador> {
     private static PlayerDAO singleton = null;
 
     private PlayerDAO() {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS users (" +
                     "Username VARCHAR(255) NOT NULL PRIMARY KEY," +
@@ -35,7 +35,7 @@ public class PlayerDAO implements Map<String, Player> {
     @Override
     public int size() {
         int i = 0;
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT count(*) FROM users WHERE Premium IS NULL")) {
             if (rs.next())
@@ -57,7 +57,7 @@ public class PlayerDAO implements Map<String, Player> {
     public boolean containsKey(Object key) {
         boolean r = false;
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 PreparedStatement ps = conn.prepareStatement("SELECT Username FROM users WHERE Username= ? AND Premium IS NULL;");
         ) {
             ps.setString(1, key.toString());
@@ -75,21 +75,21 @@ public class PlayerDAO implements Map<String, Player> {
 
     @Override
     public boolean containsValue(Object value) {
-        if (!(value instanceof Player)) return false;
-        Player p = (Player) value;
+        if (!(value instanceof Jogador)) return false;
+        Jogador p = (Jogador) value;
         return p.equals(get(p.getUsername()));
     }
 
     @Override
-    public Player get(Object key) {
+    public Jogador get(Object key) {
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 PreparedStatement ps = conn.prepareStatement("SELECT Username,Password FROM users WHERE Username= ? AND Premium IS NULL;");
         ) {
             ps.setString(1, key.toString());
             try (ResultSet rs = ps.executeQuery();) {
                 if (rs.next())
-                    return new Player(rs.getString(1), rs.getString(2));
+                    return new Jogador(rs.getString(1), rs.getString(2));
             }
         } catch (SQLException e) {
             // Database error!
@@ -100,9 +100,9 @@ public class PlayerDAO implements Map<String, Player> {
     }
 
     @Override
-    public Player put(String key, Player user) {
+    public Jogador put(String key, Jogador user) {
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO users (Username,Password) VALUES (?,?);");
         ) {
             ps.setString(1, user.getUsername());
@@ -114,17 +114,17 @@ public class PlayerDAO implements Map<String, Player> {
         }
     }
 
-    public Player put(Player u) {
+    public Jogador put(Jogador u) {
         return put(u.getUsername(), u);
     }
 
     @Override
-    public Player remove(Object key) {
-        Player user = this.get(key);
+    public Jogador remove(Object key) {
+        Jogador user = this.get(key);
         if (user == null)
             return null;
         try (
-                Connection conn = DatabaseData.getConnection();
+                Connection conn = DataBaseData.getConnection();
                 PreparedStatement ps = conn.prepareStatement("DELETE FROM users WHERE Username = ? AND Premium IS NULL;");
         ) {
             ps.setString(1, key.toString());
@@ -136,13 +136,13 @@ public class PlayerDAO implements Map<String, Player> {
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends Player> m) {
-        try (Connection conn = DatabaseData.getConnection();) {
+    public void putAll(Map<? extends String, ? extends Jogador> m) {
+        try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
             try (PreparedStatement stm = conn.prepareStatement("INSERT INTO users (Username,Password) VALUES (?,?);");) {
                 for (Entry e : m.entrySet()) {
                     stm.setString(1, (String) e.getKey());
-                    stm.setString(2, ((Player) e.getValue()).getHashedPassword());
+                    stm.setString(2, ((Jogador) e.getValue()).getHashedPassword());
                     stm.executeUpdate();
                 }
             }
@@ -156,7 +156,7 @@ public class PlayerDAO implements Map<String, Player> {
 
     @Override
     public void clear() {
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
         ) {
             stm.executeUpdate("DELETE FROM users WHERE Premium IS NULL;");
@@ -168,7 +168,7 @@ public class PlayerDAO implements Map<String, Player> {
     @Override
     public Set<String> keySet() {
         Set<String> r = new HashSet<String>();
-        try (Connection conn = DatabaseData.getConnection();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT Username FROM users WHERE Premium IS NULL;");
         ){
@@ -181,14 +181,14 @@ public class PlayerDAO implements Map<String, Player> {
     }
 
     @Override
-    public Collection<Player> values() {
-        Collection<Player> r = new HashSet<Player>();
-        try (Connection conn = DatabaseData.getConnection();
+    public Collection<Jogador> values() {
+        Collection<Jogador> r = new HashSet<Jogador>();
+        try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT Username,Password FROM users WHERE Premium IS NULL;");
         ){
             while (rs.next())
-                r.add(new Player(rs.getString(1), rs.getString(2)));
+                r.add(new Jogador(rs.getString(1), rs.getString(2)));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -197,8 +197,8 @@ public class PlayerDAO implements Map<String, Player> {
     }
 
     @Override
-    public Set<Entry<String, Player>> entrySet() {
+    public Set<Entry<String, Jogador>> entrySet() {
         return values().stream().collect(
-                Collectors.toMap(User::getUsername, x -> x)).entrySet();
+                Collectors.toMap(Utilizador::getUsername, x -> x)).entrySet();
     }
 }
