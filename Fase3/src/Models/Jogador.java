@@ -14,6 +14,12 @@ public abstract class Jogador extends Utilizador {
         super(nome);
     }
 
+    public Jogador(Jogador jogador) {
+        super(jogador);
+    }
+
+    public abstract Jogador clone();
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -38,11 +38,11 @@ public class Registado extends Jogador {
         this.pontuacaoTotal = registado.pontuacaoTotal;
     }
 
-    public String getPass(String pass) {
+    public String getPass() {
         return this.pass;
     }
 
-    public int getPontuacaoTotal(int pontuacaoTotal) {
+    public int getPontuacaoTotal() {
         return this.pontuacaoTotal;
     }
 
@@ -54,7 +54,7 @@ public class Registado extends Jogador {
         this.pontuacaoTotal = pontuacaoTotal;
     }
 
-    public Registado clone() {
+    public Jogador clone() {
         return new Registado(this);
     }
 

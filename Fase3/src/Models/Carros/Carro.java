@@ -1,4 +1,4 @@
-package Models;
+package Models.Carros;
 
 public abstract class Carro {
     
@@ -92,6 +92,8 @@ public abstract class Carro {
 
     //public abstract boolean validaPotencia();
 
+    public abstract Carro clone();
+    
     public abstract boolean validaCilindrada();
 
     @Override

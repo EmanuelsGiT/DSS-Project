@@ -1,4 +1,4 @@
-package Models;
+package Models.Carros;
 
 public class C2 extends Carro {
     /**
@@ -40,7 +40,7 @@ public class C2 extends Carro {
         this.potenciaHibrido = c2.potenciaHibrido;
     }
     
-    public C2 clone() {
+    public Carro clone() {
         return new C2(this);
     }
 

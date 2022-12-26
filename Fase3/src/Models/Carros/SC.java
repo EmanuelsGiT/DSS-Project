@@ -1,4 +1,5 @@
-package Models;
+package Models.Carros;
+
 public class SC extends Carro {
     /**
      * Variáveis de instância
@@ -33,7 +34,7 @@ public class SC extends Carro {
         super(sc);
     }
     
-    public SC clone() {
+    public Carro clone() {
         return new SC(this);
     }
     

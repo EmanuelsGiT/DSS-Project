@@ -2,9 +2,9 @@ package Models;
 
 import Models.Corrida;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class Campeonato {
     
@@ -68,18 +68,25 @@ public class Campeonato {
         return new Campeonato(this);
     }
 
-    public void adicionarRegisto(Jogador jogador, Piloto piloto, CarroSetup carroSetup) {
-        String nomeJogador = jogador.getNome();
-        this.registos.put(nomeJogador, new Registo(0, piloto, jogador, carroSetup));
+    // adiciona ao hashmap de registos um jogador registado
+    public void adicionarRegistoRegistado(Registado registado, Piloto piloto, CarroSetup carroSetup) {
+        String nomeJogador = registado.getNome();
+        this.registos.put(nomeJogador, new Registo(0, piloto, registado, carroSetup));
+    }
+
+    // adiciona ao hashmap de registos um jogador anonimo
+    public void adicionaRegistoAnonimo(Anonimo anonimo, Piloto piloto, CarroSetup carroSetup) {
+        String nomeJogador = anonimo.getNome();
+        this.registos.put(nomeJogador, new Registo(0, piloto, anonimo, carroSetup));
     }
 
     public HashMap<Registo, Integer> calculaClassificacaoFinal() {
-        // TODO
-        //iterar sobre todos os registos e calcular a pontuaçao total de cada jogador
         HashMap<Registo, Integer> classificacaoFinal = new HashMap<>();
-        for (Registo r : this.registos.values()) {
-            Jogador jog = r.getJogador(); // verificar se está registado
-            classificacaoFinal.put(r, jog.getPontuacaoTotal()); // so existe este metodo no registado ainda n sei como fazer isto
+        for (Registo r : this.registos.values()) { 
+            Jogador jog = r.getJogador();
+            if(jog instanceof Registado) {
+                classificacaoFinal.put(r, ((Registado)jog).getPontuacaoTotal()); 
+            }
         }
         return classificacaoFinal;
     }

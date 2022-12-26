@@ -1,4 +1,5 @@
 package Models;
+
 public class Anonimo extends Jogador {
     
     /**
@@ -13,6 +14,15 @@ public class Anonimo extends Jogador {
         super(nome);
     }
 
+    public Anonimo(Anonimo anonimo) {
+        super(anonimo);
+    }
+
+    @Override
+    public Jogador clone() {
+        return new Anonimo(this);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -20,4 +30,6 @@ public class Anonimo extends Jogador {
         sb.append(super.toString());
         return sb.toString();
     }
+
+    
 }

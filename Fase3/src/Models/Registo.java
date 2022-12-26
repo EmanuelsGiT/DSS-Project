@@ -17,8 +17,8 @@ public class Registo {
     public Registo() {
         this.numAfinacoes = 0;
         this.piloto = new Piloto();
-        this.jogador = new Jogador(); // again abstrato...
-        this.carroSetup = new CarroSetup();
+        this.jogador = null;
+        this.carroSetup = null;
     }
 
     public Registo(int numAfinacoes, Piloto piloto, Jogador jogador, CarroSetup carroSetup) {

@@ -1,6 +1,10 @@
 package Models;
 
-import Models.Carro;
+import Models.Carros.C1;
+import Models.Carros.C2;
+import Models.Carros.Carro;
+import Models.Carros.GT;
+import Models.Carros.SC;
 
 public class CarroSetup {
     
@@ -15,35 +19,29 @@ public class CarroSetup {
         NORMAL,
         AGRESSIVO
     }
+
     /**
      * Variáveis de instância
      */
     private double pac;
     private Pneus pneus;
     private ModoMotor modoMotor;
-    private Carro carro;
+    private Carro carro; 
 
-    public CarroSetup() {
-        this.pac = 0;
-        this.pneus = Pneus.MACIO;
-        this.modoMotor = ModoMotor.CONSERVADOR;
-        this.carro = new C1();
-    }
-
-    public CarroSetup(double pac, Pneus pneus, ModoMotor modoMotor, C1 carro) {
+    public CarroSetup(double pac, Pneus pneus, ModoMotor modoMotor, Carro carro) {
         this.pac = pac;
         this.pneus = pneus;
         this.modoMotor = modoMotor;
-        this.carro = new C1(carro); // como fazer esta shit
+        this.carro = carro.clone(); 
     }
 
     public CarroSetup(CarroSetup carroSetup) {
         this.pac = carroSetup.pac;
         this.pneus = carroSetup.pneus;
         this.modoMotor = carroSetup.modoMotor;
-        this.carro = carroSetup.getCarro(); // IDK
+        this.carro = carroSetup.getCarro();
     }
-
+    
     public double getPac() {
         return this.pac;
     }
@@ -57,9 +55,9 @@ public class CarroSetup {
     }
 
     public Carro getCarro() {
-        return this.carro; /// ISTO TA MAL MAS COM CALMA AMIGOS, ACHO Q SCLR TENHO Q FAZER UM ABSTRACT CLONE E O CRL
+        return this.carro.clone();
     }
-
+    
     public void setPac(double pac) {
         this.pac = pac;
     }
@@ -72,13 +70,15 @@ public class CarroSetup {
         this.modoMotor = modoMotor;
     }
 
+    
     public void setCarro(Carro carro) {
-        this.carro = carro.clone(); // heheheheheheheh
+        this.carro = carro.clone(); 
     }
 
     public CarroSetup clone() {
         return new CarroSetup(this);
     }
+    
 
     public boolean validaPac() {
         return (this.pac >= 0 && this.pac <=1 );
