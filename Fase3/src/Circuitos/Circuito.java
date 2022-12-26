@@ -1,4 +1,4 @@
-package Models;
+package Circuitos;
 import java.util.ArrayList;
 
 public class Circuito {

@@ -1,10 +1,7 @@
-package Models;
+package Campeonatos;
 
-import Models.Carros.C1;
-import Models.Carros.C2;
-import Models.Carros.Carro;
-import Models.Carros.GT;
-import Models.Carros.SC;
+import Carros.Carro;
+
 
 public class CarroSetup {
     

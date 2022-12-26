@@ -1,9 +1,13 @@
-package Models;
+package Campeonatos;
 
-import Models.Corrida;
+import Utilizadores.Anonimo;
+import Utilizadores.Jogador;
+import Utilizadores.Registado;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import Pilotos.Piloto;
 
 
 public class Campeonato {

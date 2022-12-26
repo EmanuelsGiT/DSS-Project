@@ -1,4 +1,4 @@
-package Models.Carros;
+package Carros;
 
 public class GT extends Carro {
     /**
@@ -17,7 +17,6 @@ public class GT extends Carro {
     
     /**
      * Construtor parameterizado
-     * TODO
      * FIABILIDADE POR CALCULAR
      * @param marca
      * @param modelo

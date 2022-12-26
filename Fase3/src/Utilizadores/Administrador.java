@@ -1,4 +1,5 @@
-package Models;
+package Utilizadores;
+
 public class Administrador extends Utilizador{
     
     /**

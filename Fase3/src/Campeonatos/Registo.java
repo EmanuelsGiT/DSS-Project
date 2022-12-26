@@ -1,8 +1,7 @@
-package Models;
+package Campeonatos;
 
-import Models.CarroSetup;
-import Models.Jogador;
-import Models.Piloto;
+import Pilotos.Piloto;
+import Utilizadores.Jogador;
 
 public class Registo {
     

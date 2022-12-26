@@ -1,4 +1,4 @@
-package Models.Carros;
+package Carros;
 
 public class SC extends Carro {
     /**
@@ -14,7 +14,6 @@ public class SC extends Carro {
     
     /**
      * Construtor parameterizado
-     * TODO
      * Não recebe cilindrada visto que esta é sempre 2500
      * FIABILIDADE POR CALCULAR
      * @param marca

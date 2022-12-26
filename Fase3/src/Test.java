@@ -1,14 +1,19 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Models.*;
-import Models.CarroSetup.ModoMotor;
-import Models.CarroSetup.Pneus;
-import Models.Carros.C1;
-import Models.Carros.Carro;
-import Models.Circuito.GDU;
-import Models.Corrida.Clima;
+import Campeonatos.Campeonato;
+import Campeonatos.CarroSetup;
+import Campeonatos.Corrida;
+import Campeonatos.Registo;
+import Campeonatos.CarroSetup.ModoMotor;
+import Campeonatos.CarroSetup.Pneus;
+import Campeonatos.Corrida.Clima;
+import Carros.C1;
+import Circuitos.Circuito;
+import Circuitos.Circuito.GDU;
+import Pilotos.Piloto;
+import Utilizadores.Anonimo;
+import Utilizadores.Registado;
 
 public class Test {
     public static void main(String[] args) {

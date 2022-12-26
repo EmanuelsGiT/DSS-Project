@@ -1,4 +1,4 @@
-package Models;
+package Utilizadores;
 
 public class Anonimo extends Jogador {
     

@@ -1,8 +1,8 @@
-package Models;
-
-import Models.Circuito;
+package Campeonatos;
 
 import java.util.HashMap;
+
+import Circuitos.Circuito;
 
 public class Corrida {
     
