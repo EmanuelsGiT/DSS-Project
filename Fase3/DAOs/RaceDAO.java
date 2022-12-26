@@ -1,6 +1,6 @@
 package DAOs;
 
-import Models.Corrida;
+import Campeonatos.Corrida;
 //import Models.participants.Participant;
 
 import java.sql.*;

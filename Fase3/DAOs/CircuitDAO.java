@@ -1,6 +1,6 @@
 package DAOs;
 
-import Models.Circuito;
+import Circuitos.Circuito;
 
 import java.util.*;
 

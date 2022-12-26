@@ -1,7 +1,7 @@
 package DAOs;
 
-import Models.Utilizador;
-import Models.Jogador;
+import Utilizadores.Utilizador;
+import Utilizadores.Jogador;
 
 import java.sql.*;
 import java.util.*;
