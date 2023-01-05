@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="DSS_Fase1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Fase1/DSS_Fase1.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

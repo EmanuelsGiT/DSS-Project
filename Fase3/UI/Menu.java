@@ -21,6 +21,7 @@ public class Menu {
     private String titulo;                  // Titulo do menu (opcional)
     private List<String> opcoes;            // Lista de opções
     private List<PreCondition> disponivel;  // Lista de pré-condições
+    private List<String> textoIndesponivel; // Lista de textos quando indesponivel
     private List<Handler> handlers;         // Lista de handlers
 
     // Construtor
@@ -34,6 +35,7 @@ public class Menu {
         this.titulo = "Menu";
         this.opcoes = new ArrayList<>();
         this.disponivel = new ArrayList<>();
+        this.textoIndesponivel = new ArrayList<>();
         this.handlers = new ArrayList<>();
     }
 
@@ -51,9 +53,11 @@ public class Menu {
         this.opcoes = new ArrayList<>(opcoes);
         this.disponivel = new ArrayList<>();
         this.handlers = new ArrayList<>();
+        this.textoIndesponivel = new ArrayList<>();
         this.opcoes.forEach(s-> {
             this.disponivel.add(()->true);
             this.handlers.add(()->System.out.println("\nATENÇÃO: Opção não implementada!"));
+            this.textoIndesponivel.add(("Opção indesponivel!"));
         });
     }
 
@@ -176,17 +180,24 @@ public class Menu {
         this.handlers.set(i-1, h);
     }
 
+    /**
+     * Método para registar um texto indesponivel numa opção do menu.
+     *
+     * @param i indice da opção  (começa em 1)
+     * @param t texto a registar
+     */
+    public void setTextoIndesponivel(int i, String t) {this.textoIndesponivel.set(i-1, t); }
     // Métodos auxiliares
 
     /** Apresentar o menu */
     private void show() {
-        System.out.println("\n *** "+this.titulo+" *** ");
-        for (int i=0; i<this.opcoes.size(); i++) {
-            System.out.print(i+1);
-            System.out.print(" - ");
-            System.out.println(this.disponivel.get(i).validate()?this.opcoes.get(i):"---");
+        System.out.println("#---------------# " + this.titulo + " #---------------#");
+        for (int i = 0; i < this.opcoes.size(); i++) {
+            System.out.print("[" + (i+1) + "] - ");
+            System.out.println(this.disponivel.get(i).validate()?this.opcoes.get(i): this.textoIndesponivel.get(i));
         }
-        System.out.println("0 - Sair");
+        System.out.println("[0] - Sair");
+        System.out.println("#---------------# "+ this.titulo.replaceAll(".", "-") + " #---------------#");
     }
 
     /** Ler uma opção válida */
@@ -206,5 +217,21 @@ public class Menu {
             op = -1;
         }
         return op;
+    }
+
+    public static String[] lerCredenciais() {
+        return new String[] {lerNome(), lerPalavraPasse()};
+    }
+
+    public static String lerNome() {
+        System.out.println("Nome do utilizador: ");
+        String nome = is.nextLine();
+        return nome;
+    }
+
+    public static String lerPalavraPasse() {
+        System.out.println("Palavra-passe: ");
+        String palavraPasse = is.nextLine();
+        return palavraPasse;
     }
 }

@@ -1,6 +1,6 @@
 package DAOs;
 
-import Pilotos.Piloto;
+import src.Models.Pilotos.Piloto;
 
 import java.sql.*;
 import java.util.*;

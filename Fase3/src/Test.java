@@ -1,19 +1,21 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Campeonatos.Campeonato;
-import Campeonatos.CarroSetup;
-import Campeonatos.Corrida;
-import Campeonatos.Registo;
-import Campeonatos.CarroSetup.ModoMotor;
-import Campeonatos.CarroSetup.Pneus;
-import Campeonatos.Corrida.Clima;
-import Carros.C1;
-import Circuitos.Circuito;
-import Circuitos.Circuito.GDU;
-import Pilotos.Piloto;
-import Utilizadores.Anonimo;
-import Utilizadores.Registado;
+import src.Models.Campeonatos.Campeonato;
+import src.Models.Campeonatos.CarroSetup;
+import src.Models.Campeonatos.Corrida;
+import src.Models.Campeonatos.Registo;
+import src.Models.Campeonatos.CarroSetup.ModoMotor;
+import src.Models.Campeonatos.CarroSetup.Pneus;
+import src.Models.Campeonatos.Corrida.Clima;
+import src.Models.Carros.C1;
+import src.Models.Circuitos.Circuito;
+import src.Models.Circuitos.Circuito.GDU;
+import src.Models.Pilotos.Piloto;
+import src.Models.Utilizadores.Anonimo;
+import src.Models.Utilizadores.Registado;
 
 public class Test {
     public static void main(String[] args) {

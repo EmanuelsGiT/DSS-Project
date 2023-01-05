@@ -1,6 +1,6 @@
 package DAOs;
 
-import Utilizadores.Administrador;
+import src.Models.Utilizadores.Administrador;
 
 import java.sql.*;
 import java.util.*;
