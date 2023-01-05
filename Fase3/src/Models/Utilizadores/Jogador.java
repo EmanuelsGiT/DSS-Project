@@ -10,8 +10,8 @@ public abstract class Jogador extends Utilizador {
         super();
     } 
 
-    public Jogador(String nome, String pass) {
-        super(nome,pass);
+    public Jogador(String nome) {
+        super(nome);
     }
 
     public Jogador(Jogador jogador) {

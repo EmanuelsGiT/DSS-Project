@@ -5,23 +5,20 @@ public abstract class Utilizador {
      * Variáveis de instância
      */
     private String nome;
-    private String pass;
 
     /**
      * Construtor vazio/não parameterizado
      */
     public Utilizador() {
         this.nome = "";
-        this.pass = "";
     }
 
     /**
      * Construtor paramaterizado
      * @param nome
      */
-    public Utilizador(String nome, String pass) {
+    public Utilizador(String nome) {
         this.nome = nome;
-        this.pass = pass;
     }
 
     /**
@@ -30,7 +27,6 @@ public abstract class Utilizador {
      */
     public Utilizador(Utilizador utilizador) {
         this.nome = utilizador.nome;
-        this.pass = utilizador.pass;
     }
 
     public String getNome() {
@@ -40,15 +36,6 @@ public abstract class Utilizador {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    public String getPass() {
-        return this.pass;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
 
 
     @Override
