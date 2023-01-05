@@ -5,6 +5,7 @@ public class Administrador extends Utilizador{
     /**
      * Variáveis de instância
      */
+    private String nome;
     private String pass;
 
     /**
@@ -32,6 +33,14 @@ public class Administrador extends Utilizador{
     public Administrador(Administrador administrador) {
         super(administrador.getNome());
         this.pass = administrador.pass;
+    }
+
+    public String getNome(){
+        return this.nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getPass() {

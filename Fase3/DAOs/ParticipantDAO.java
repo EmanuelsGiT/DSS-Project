@@ -102,7 +102,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     public boolean containsValue(Object value) {
         if (!(value instanceof Participant)) return false;
         Participant p = (Participant) value;
-        return p.equals(get(p.getManager().getUsername()));
+        return p.equals(get(p.getManager().getNome()));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     }
 
     public Participant put(Participant part) {
-        return this.put(part.getManager().getUsername(),part);
+        return this.put(part.getManager().getNome(),part);
     }
 
     public Participant update(Participant part) {
@@ -134,7 +134,7 @@ public class ParticipantDAO implements Map<String, Participant> {
             ps.setInt(1,part.getCar().getId());
             ps.setString(2,part.getDriver().getDriverName());
             ps.setInt(3,part.getNumberOfSetupChanges());
-            ps.setString(4,part.getManager().getUsername());
+            ps.setString(4,part.getManager().getNome());
             ps.executeUpdate();
             return part;
         } catch (SQLException e) {
@@ -229,6 +229,6 @@ public class ParticipantDAO implements Map<String, Participant> {
     @Override
     public Set<Entry<String, Participant>> entrySet() {
         return values().stream().collect(
-                Collectors.toMap(x->x.getManager().getUsername(), x -> x)).entrySet();
+                Collectors.toMap(x->x.getManager().getNome(), x -> x)).entrySet();
     }
 }

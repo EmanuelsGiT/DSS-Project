@@ -185,7 +185,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                     ps.setInt(n, race.getId());
                     n++;
                 }
-                ps.setString(n, race.getAdminHosting().getUsername());
+                ps.setString(n, race.getAdminHosting().getNome());
                 n++;
                 ps.setDouble(n, race.getWeatherConditions().getVariability());
                 n++;
@@ -207,7 +207,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                 for (int i=0;i<t.size();i++){
                     ps.setInt(1,race.getId());
                     ps.setInt(2,i);
-                    ps.setString(3,t.get(i).getManager().getUsername());
+                    ps.setString(3,t.get(i).getManager().getNome());
                     ps.executeUpdate();
                 }
             } catch (SQLException e) {
@@ -219,7 +219,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                 for (Entry<Participant,Boolean>e: race.getReady().entrySet()){
                     ps.setInt(1,race.getId());
                     ps.setBoolean(2,e.getValue());
-                    ps.setString(3,e.getKey().getManager().getUsername());
+                    ps.setString(3,e.getKey().getManager().getNome());
                     ps.executeUpdate();
                 }
             } catch (SQLException e) {
@@ -245,7 +245,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                 Connection conn = DataBaseData.getConnection();){
             conn.setAutoCommit(false);
             try(PreparedStatement ps = conn.prepareStatement("UPDATE races SET AdminHosting=?,WeatherVariability=?,Circuit=?,Finished=? WHERE Id=?;");){
-                ps.setString(1,race.getAdminHosting().getUsername());
+                ps.setString(1,race.getAdminHosting().getNome());
                 ps.setDouble(2,race.getWeatherConditions().getVariability());
                 ps.setString(3,race.getTrack().getName());
                 ps.setBoolean(4,race.getFinished());
@@ -260,7 +260,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                 for (int i=0;i<t.size();i++) {
                     ps.setInt(1, race.getId());
                     ps.setInt(2, i);
-                    ps.setString(3, t.get(i).getManager().getUsername());
+                    ps.setString(3, t.get(i).getManager().getNome());
                     ps.setInt(4, i);
                     ps.executeUpdate();
                 }
@@ -272,7 +272,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                 for (Entry<Participant,Boolean>e:race.getReady().entrySet()) {
                     ps.setInt(1, race.getId());
                     ps.setBoolean(2, e.getValue());
-                    ps.setString(3, e.getKey().getManager().getUsername());
+                    ps.setString(3, e.getKey().getManager().getNome());
                     ps.setBoolean(4, e.getValue());
                     ps.executeUpdate();
                 }
@@ -324,7 +324,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                         ps.setInt(n, race.getId());
                         n++;
                     }
-                    ps.setString(n, race.getAdminHosting().getUsername());
+                    ps.setString(n, race.getAdminHosting().getNome());
                     n++;
                     ps.setDouble(n, race.getWeatherConditions().getVariability());
                     n++;
@@ -344,7 +344,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                     for (int i = 0; i < t.size(); i++) {
                         ps.setInt(1, race.getId());
                         ps.setInt(2, i);
-                        ps.setString(3, t.get(i).getManager().getUsername());
+                        ps.setString(3, t.get(i).getManager().getNome());
                         ps.executeUpdate();
                     }
                 } catch (SQLException e) {
@@ -354,7 +354,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
                     for (Entry<Participant, Boolean> e : race.getReady().entrySet()) {
                         ps.setInt(1, race.getId());
                         ps.setBoolean(2, e.getValue());
-                        ps.setString(3, e.getKey().getManager().getUsername());
+                        ps.setString(3, e.getKey().getManager().getNome());
                         ps.executeUpdate();
                     }
                 } catch (SQLException e) {

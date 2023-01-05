@@ -77,7 +77,7 @@ public class PlayerDAO implements Map<String, Jogador> {
     public boolean containsValue(Object value) {
         if (!(value instanceof Jogador)) return false;
         Jogador p = (Jogador) value;
-        return p.equals(get(p.getUsername()));
+        return p.equals(get(p.getNome()));
     }
 
     @Override
@@ -105,8 +105,8 @@ public class PlayerDAO implements Map<String, Jogador> {
                 Connection conn = DataBaseData.getConnection();
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO users (Username,Password) VALUES (?,?);");
         ) {
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getHashedPassword());
+            ps.setString(1, user.getNome());
+            ps.setString(2, user.getPass());
             ps.executeUpdate();
             return user;
         } catch (SQLException e) {
@@ -115,7 +115,7 @@ public class PlayerDAO implements Map<String, Jogador> {
     }
 
     public Jogador put(Jogador u) {
-        return put(u.getUsername(), u);
+        return put(u.getNome(), u);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class PlayerDAO implements Map<String, Jogador> {
             try (PreparedStatement stm = conn.prepareStatement("INSERT INTO users (Username,Password) VALUES (?,?);");) {
                 for (Entry e : m.entrySet()) {
                     stm.setString(1, (String) e.getKey());
-                    stm.setString(2, ((Jogador) e.getValue()).getHashedPassword());
+                    stm.setString(2, ((Jogador) e.getValue()).getPass());
                     stm.executeUpdate();
                 }
             }
@@ -199,6 +199,6 @@ public class PlayerDAO implements Map<String, Jogador> {
     @Override
     public Set<Entry<String, Jogador>> entrySet() {
         return values().stream().collect(
-                Collectors.toMap(Utilizador::getUsername, x -> x)).entrySet();
+                Collectors.toMap(Utilizador::getNome, x -> x)).entrySet();
     }
 }
