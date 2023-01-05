@@ -1,6 +1,6 @@
 package DAOs;
 
-import Carros.*;
+import src.Models.Carros.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;

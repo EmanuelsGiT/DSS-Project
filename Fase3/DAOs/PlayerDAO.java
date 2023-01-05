@@ -15,8 +15,7 @@ public class PlayerDAO implements Map<String, Jogador> {
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS users (" +
                     "Username VARCHAR(255) NOT NULL PRIMARY KEY," +
-                    "Password CHAR(60) NOT NULL," +
-                    "Premium BOOLEAN);";
+                    "Password CHAR(60) NOT NULL)";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
             // Erro a criar tabela...
@@ -37,7 +36,7 @@ public class PlayerDAO implements Map<String, Jogador> {
         int i = 0;
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT count(*) FROM users WHERE Premium IS NULL")) {
+             ResultSet rs = stm.executeQuery("SELECT count(*) FROM users")) {
             if (rs.next())
                 i = rs.getInt(1);
         } catch (Exception e) {
@@ -58,7 +57,7 @@ public class PlayerDAO implements Map<String, Jogador> {
         boolean r = false;
         try (
                 Connection conn = DataBaseData.getConnection();
-                PreparedStatement ps = conn.prepareStatement("SELECT Username FROM users WHERE Username= ? AND Premium IS NULL;");
+                PreparedStatement ps = conn.prepareStatement("SELECT Username FROM users WHERE Username= ?;");
         ) {
             ps.setString(1, key.toString());
             try (ResultSet rs = ps.executeQuery();) {
@@ -84,7 +83,7 @@ public class PlayerDAO implements Map<String, Jogador> {
     public Jogador get(Object key) {
         try (
                 Connection conn = DataBaseData.getConnection();
-                PreparedStatement ps = conn.prepareStatement("SELECT Username,Password FROM users WHERE Username= ? AND Premium IS NULL;");
+                PreparedStatement ps = conn.prepareStatement("SELECT Username,Password FROM users WHERE Username= ?;");
         ) {
             ps.setString(1, key.toString());
             try (ResultSet rs = ps.executeQuery();) {

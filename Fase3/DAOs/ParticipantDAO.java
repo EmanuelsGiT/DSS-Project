@@ -1,6 +1,6 @@
 package DAOs;
 
-import Models.participants.Participant;
+import src.Models.participants.Participant;
 
 import java.sql.*;
 import java.util.*;
