@@ -1,20 +1,20 @@
 package DAOs;
 
 import src.Models.Campeonatos.Corrida;
-//import Models.participants.Participant;
+import src.Models.Campeonatos.Registo;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RaceDAO implements Map<Integer, Corrida> {
+public class CorridaDAO implements Map<Integer, Corrida> {
 
-    private static RaceDAO singleton = null;
+    private static CorridaDAO singleton = null;
 
-    private RaceDAO() {
+    private CorridaDAO() {
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
-            String sql = "CREATE TABLE IF NOT EXISTS races (" +
+            String sql = "CREATE TABLE IF NOT EXISTS Corridas (" +
                     "Id INT AUTO_INCREMENT PRIMARY KEY," +
                     "AdminHosting VARCHAR(255) NOT NULL," +
                     "WeatherVariability DECIMAL(11,10) NOT NULL," +
@@ -23,36 +23,36 @@ public class RaceDAO implements Map<Integer, Corrida> {
                     "FOREIGN KEY (AdminHosting) REFERENCES users(Username) ON DELETE CASCADE ON UPDATE CASCADE," +
                     ");";
             stm.executeUpdate(sql);
-            sql = "CREATE TABLE IF NOT EXISTS raceResults (" +
+            sql = "CREATE TABLE IF NOT EXISTS CorridaResults (" +
                     "Id INT ," +
                     "Position INT NOT NULL," +
-                    "Participant VARCHAR(255) NOT NULL," +
-                    "PRIMARY KEY (Id,Participant)," +
-                    "FOREIGN KEY (Id) REFERENCES races(Id) ON DELETE CASCADE ON UPDATE CASCADE," +
-                    "FOREIGN KEY (Participant) REFERENCES participants(Player) ON DELETE CASCADE ON UPDATE CASCADE," +
+                    "Registo VARCHAR(255) NOT NULL," +
+                    "PRIMARY KEY (Id,Registo)," +
+                    "FOREIGN KEY (Id) REFERENCES Corridas(Id) ON DELETE CASCADE ON UPDATE CASCADE," +
+                    "FOREIGN KEY (Registo) REFERENCES Registos(Registo) ON DELETE CASCADE ON UPDATE CASCADE," +
                     ");";
             stm.executeUpdate(sql);
-            sql = "CREATE TABLE IF NOT EXISTS raceReady (" +
+            sql = "CREATE TABLE IF NOT EXISTS CorridaReady (" +
                     "Id INT ," +
                     "Ready BOOLEAN NOT NULL," +
-                    "Participant VARCHAR(255) NOT NULL," +
-                    "PRIMARY KEY (Id,Participant)," +
-                    "FOREIGN KEY (Id) REFERENCES races(Id) ON DELETE CASCADE ON UPDATE CASCADE," +
-                    "FOREIGN KEY (Participant) REFERENCES participants(Player) ON DELETE CASCADE ON UPDATE CASCADE," +
+                    "Registo VARCHAR(255) NOT NULL," +
+                    "PRIMARY KEY (Id,Registo)," +
+                    "FOREIGN KEY (Id) REFERENCES Corridas(Id) ON DELETE CASCADE ON UPDATE CASCADE," +
+                    "FOREIGN KEY (Registo) REFERENCES Registos(Registo) ON DELETE CASCADE ON UPDATE CASCADE," +
                     ");";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
             // Erro a criar tabela...
-            e.printStackTrace();
+            e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
     }
 
-    public static RaceDAO getInstance() {
-        if (RaceDAO.singleton == null) {
-            RaceDAO.singleton = new RaceDAO();
+    public static CorridaDAO getInstance() {
+        if (CorridaDAO.singleton == null) {
+            CorridaDAO.singleton = new CorridaDAO();
         }
-        return RaceDAO.singleton;
+        return CorridaDAO.singleton;
     }
 
     @Override
@@ -60,12 +60,12 @@ public class RaceDAO implements Map<Integer, Corrida> {
         int i = 0;
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT count(*) FROM races;")) {
+             ResultSet rs = stm.executeQuery("SELECT count(*) FROM Corridas;")) {
             if (rs.next())
                 i = rs.getInt(1);
         } catch (Exception e) {
             // Erro a criar tabela...
-            e.printStackTrace();
+            e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
         return i;
@@ -82,7 +82,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
             return false;
         boolean r=false;
         try (Connection conn = DataBaseData.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT Id FROM races WHERE Id= ?;");){
+             PreparedStatement ps = conn.prepareStatement("SELECT Id FROM Corridas WHERE Id= ?;");){
             ps.setInt(1,(Integer)key);
             try (ResultSet rs = ps.executeQuery();) {
                 if (rs.next())
@@ -90,71 +90,71 @@ public class RaceDAO implements Map<Integer, Corrida> {
             }
         } catch (SQLException e) {
             // Database error!
-            e.printStackTrace();
+            e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
         return r;
     }
 
-    public List<Participant> participants(Integer key){
-        List<Participant> res = new ArrayList<>();
+    public List<Registo> Registos(Integer key){
+        List<Registo> res = new ArrayList<>();
         try (Connection conn = DataBaseData.getConnection();
-        PreparedStatement ps = conn.prepareStatement("SELECT Participant FROM raceResults WHERE Id= ? ORDER BY Position ASC;");){
+        PreparedStatement ps = conn.prepareStatement("SELECT Registo FROM CorridaResults WHERE Id= ? ORDER BY Position ASC;");){
             ps.setInt(1,key);
             try (ResultSet rs = ps.executeQuery();) {
                 while (rs.next()){
-                    res.add(ParticipantDAO.getInstance().get(rs.getString("Participant")));
+                    res.add(RegistoDAO.getInstance().get(rs.getString("Registo")));
                 }
             }
             } catch (SQLException e) {
                 // Database error!
-                e.printStackTrace();
+                e.printStackTCorrida();
                 throw new NullPointerException(e.getMessage());
             }
         return res;
     }
-    public Map<Participant,Boolean> ready(Integer key){
-        Map<Participant,Boolean> res = new HashMap<>();
+    public Map<Registo,Boolean> ready(Integer key){
+        Map<Registo,Boolean> res = new HashMap<>();
         try (Connection conn = DataBaseData.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT Participant,Ready FROM raceReady WHERE Id= ?;");){
+             PreparedStatement ps = conn.prepareStatement("SELECT Registo,Ready FROM CorridaReady WHERE Id= ?;");){
             ps.setInt(1,key);
             try (ResultSet rs = ps.executeQuery();) {
                 while (rs.next()){
-                    res.put(ParticipantDAO.getInstance().get(rs.getString("Participant")),rs.getBoolean("Ready"));
+                    res.put(RegistoDAO.getInstance().get(rs.getString("Registo")),rs.getBoolean("Ready"));
                 }
             }
         } catch (SQLException e) {
             // Database error!
-            e.printStackTrace();
+            e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
         return res;
     }
 
     @Override
-    public Race get(Object key) {
+    public Corrida get(Object key) {
         if (!(Integer.class.isInstance(key)))
             return null;
         try (Connection conn = DataBaseData.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT Id,AdminHosting,WeatherVariability,Circuit,Finished FROM races WHERE Id= ?;");){
+             PreparedStatement ps = conn.prepareStatement("SELECT Id,AdminHosting,WeatherVariability,Circuit,Finished FROM Corridas WHERE Id= ?;");){
             ps.setInt(1,(Integer)key);
             try (ResultSet rs = ps.executeQuery();){
                 if (rs.next()) {
                     boolean b=rs.getBoolean("Finished");
-                    return new Race(
+                    return new Corrida(
                             rs.getInt("Id"),
                             AdminDAO.getInstance().get(rs.getString("AdminHosting")),
                             b,
                             new Weather(rs.getDouble("WeatherVariability")),
-                            CircuitDAO.getInstance().get(rs.getString("Circuit")),
-                            b?participants((Integer) key): new ArrayList<Participant>(),
+                            CircuitoDAO.getInstance().get(rs.getString("Circuit")),
+                            b?Registos((Integer) key): new ArrayList<Registo>(),
                             ready((Integer) key)
                     );
                 }
             }
         } catch (SQLException e) {
             // Database error!
-            e.printStackTrace();
+            e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
         return null;
@@ -162,18 +162,18 @@ public class RaceDAO implements Map<Integer, Corrida> {
 
     @Override
     public boolean containsValue(Object value) {
-        if (!(value instanceof Race)) return false;
-        Race p = (Race) value;
+        if (!(value instanceof Corrida)) return false;
+        Corrida p = (Corrida) value;
         return p.equals(get(p.getId()));
     }
 
     @Override
-    public Race put(Integer key, Race race) {
+    public Corrida put(Integer key, Corrida Corrida) {
         String sql = "";
         if (key == null)
-            sql = "INSERT INTO races (AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?);";
+            sql = "INSERT INTO Corridas (AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?);";
         else
-            sql = "INSERT INTO races (Id,AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?,?);";
+            sql = "INSERT INTO Corridas (Id,AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?,?);";
 
         try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
@@ -182,30 +182,30 @@ public class RaceDAO implements Map<Integer, Corrida> {
             ) {
                 int n = 1;
                 if (key != null) {
-                    ps.setInt(n, race.getId());
+                    ps.setInt(n, Corrida.getId());
                     n++;
                 }
-                ps.setString(n, race.getAdminHosting().getNome());
+                ps.setString(n, Corrida.getAdminHosting().getNome());
                 n++;
-                ps.setDouble(n, race.getWeatherConditions().getVariability());
+                ps.setDouble(n, Corrida.getWeatherConditions().getVariability());
                 n++;
-                ps.setString(n, race.getTrack().getName());
+                ps.setString(n, Corrida.getTrack().getName());
                 n++;
-                ps.setBoolean(n, race.getFinished());
+                ps.setBoolean(n, Corrida.getFinished());
                 ps.executeUpdate();
                 try (ResultSet rs = ps.getGeneratedKeys();) {
                     if (rs.next())
-                        race.setId(rs.getInt(1));
+                        Corrida.setId(rs.getInt(1));
                 }
                 } catch (SQLException e) {
                     return null;
                 }
             try (
-                    PreparedStatement ps = conn.prepareStatement("INSERT INTO raceResults (Id,Position,Participant) VALUES (?,?,?) ");
+                    PreparedStatement ps = conn.prepareStatement("INSERT INTO CorridaResults (Id,Position,Registo) VALUES (?,?,?) ");
             ) {
-                List<Participant> t = race.getResults();
+                List<Registo> t = Corrida.getResults();
                 for (int i=0;i<t.size();i++){
-                    ps.setInt(1,race.getId());
+                    ps.setInt(1,Corrida.getId());
                     ps.setInt(2,i);
                     ps.setString(3,t.get(i).getManager().getNome());
                     ps.executeUpdate();
@@ -214,10 +214,10 @@ public class RaceDAO implements Map<Integer, Corrida> {
                 return null;
             }
             try (
-                    PreparedStatement ps = conn.prepareStatement("INSERT INTO raceReady (Id,Ready,Participant) VALUES (?,?,?) ");
+                    PreparedStatement ps = conn.prepareStatement("INSERT INTO CorridaReady (Id,Ready,Registo) VALUES (?,?,?) ");
             ) {
-                for (Entry<Participant,Boolean>e: race.getReady().entrySet()){
-                    ps.setInt(1,race.getId());
+                for (Entry<Registo,Boolean>e: Corrida.getReady().entrySet()){
+                    ps.setInt(1,Corrida.getId());
                     ps.setBoolean(2,e.getValue());
                     ps.setString(3,e.getKey().getManager().getNome());
                     ps.executeUpdate();
@@ -230,35 +230,35 @@ public class RaceDAO implements Map<Integer, Corrida> {
             } catch (SQLException e) {
                 return null;
             }
-        return race;
+        return Corrida;
     }
 
-    public Race put(Race race) {
-        return this.put(race.getId(),race);
+    public Corrida put(Corrida Corrida) {
+        return this.put(Corrida.getId(),Corrida);
     }
 
 
-    public Race update(Race race) {
-        if (race.getId()==null)
+    public Corrida update(Corrida Corrida) {
+        if (Corrida.getId()==null)
                 return null;
         try (
                 Connection conn = DataBaseData.getConnection();){
             conn.setAutoCommit(false);
-            try(PreparedStatement ps = conn.prepareStatement("UPDATE races SET AdminHosting=?,WeatherVariability=?,Circuit=?,Finished=? WHERE Id=?;");){
-                ps.setString(1,race.getAdminHosting().getNome());
-                ps.setDouble(2,race.getWeatherConditions().getVariability());
-                ps.setString(3,race.getTrack().getName());
-                ps.setBoolean(4,race.getFinished());
-                ps.setInt(5,race.getId());
+            try(PreparedStatement ps = conn.prepareStatement("UPDATE Corridas SET AdminHosting=?,WeatherVariability=?,Circuit=?,Finished=? WHERE Id=?;");){
+                ps.setString(1,Corrida.getAdminHosting().getNome());
+                ps.setDouble(2,Corrida.getWeatherConditions().getVariability());
+                ps.setString(3,Corrida.getTrack().getName());
+                ps.setBoolean(4,Corrida.getFinished());
+                ps.setInt(5,Corrida.getId());
                 ps.executeUpdate();
             }
             catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO raceResults (Id,Position,Participant) VALUES (?,?,?) ON DUPLICATE KEY UPDATE Position=?;");){
-                List<Participant> t = race.getResults();
+            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO CorridaResults (Id,Position,Registo) VALUES (?,?,?) ON DUPLICATE KEY UPDATE Position=?;");){
+                List<Registo> t = Corrida.getResults();
                 for (int i=0;i<t.size();i++) {
-                    ps.setInt(1, race.getId());
+                    ps.setInt(1, Corrida.getId());
                     ps.setInt(2, i);
                     ps.setString(3, t.get(i).getManager().getNome());
                     ps.setInt(4, i);
@@ -268,9 +268,9 @@ public class RaceDAO implements Map<Integer, Corrida> {
             catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO raceReady (Id,Ready,Participant) VALUES (?,?,?) ON DUPLICATE KEY UPDATE Ready=?;");){
-                for (Entry<Participant,Boolean>e:race.getReady().entrySet()) {
-                    ps.setInt(1, race.getId());
+            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO CorridaReady (Id,Ready,Registo) VALUES (?,?,?) ON DUPLICATE KEY UPDATE Ready=?;");){
+                for (Entry<Registo,Boolean>e:Corrida.getReady().entrySet()) {
+                    ps.setInt(1, Corrida.getId());
                     ps.setBoolean(2, e.getValue());
                     ps.setString(3, e.getKey().getManager().getNome());
                     ps.setBoolean(4, e.getValue());
@@ -285,18 +285,18 @@ public class RaceDAO implements Map<Integer, Corrida> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return race;
+        return Corrida;
     }
 
 
     @Override
-    public Race remove(Object key) {
-        Race value = this.get(key);
+    public Corrida remove(Object key) {
+        Corrida value = this.get(key);
         if (value==null)
             return null;
         try (
                 Connection conn = DataBaseData.getConnection();
-                PreparedStatement ps = conn.prepareStatement("DELETE FROM races WHERE Id = ?;");
+                PreparedStatement ps = conn.prepareStatement("DELETE FROM Corridas WHERE Id = ?;");
         ){
             ps.setInt(1,(Integer)key);
             ps.executeUpdate();
@@ -307,42 +307,42 @@ public class RaceDAO implements Map<Integer, Corrida> {
     }
 
     @Override
-    public void putAll(Map<? extends Integer, ? extends Race> m) {
+    public void putAll(Map<? extends Integer, ? extends Corrida> m) {
         try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
-            for (Entry<? extends Integer, ? extends Race> en:m.entrySet()) {
+            for (Entry<? extends Integer, ? extends Corrida> en:m.entrySet()) {
                 Integer key = en.getKey();
-                Race race = en.getValue();
+                Corrida Corrida = en.getValue();
                 String sql = "";
                 if (key == null)
-                    sql = "INSERT INTO races (AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?);";
+                    sql = "INSERT INTO Corridas (AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?);";
                 else
-                    sql = "INSERT INTO races (Id,AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?,?);";
+                    sql = "INSERT INTO Corridas (Id,AdminHosting,WeatherVariability,Circuit,Finished) VALUES (?,?,?,?,?);";
                 try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
                     int n = 1;
                     if (key != null) {
-                        ps.setInt(n, race.getId());
+                        ps.setInt(n, Corrida.getId());
                         n++;
                     }
-                    ps.setString(n, race.getAdminHosting().getNome());
+                    ps.setString(n, Corrida.getAdminHosting().getNome());
                     n++;
-                    ps.setDouble(n, race.getWeatherConditions().getVariability());
+                    ps.setDouble(n, Corrida.getWeatherConditions().getVariability());
                     n++;
-                    ps.setString(n, race.getTrack().getName());
+                    ps.setString(n, Corrida.getTrack().getName());
                     n++;
-                    ps.setBoolean(n, race.getFinished());
+                    ps.setBoolean(n, Corrida.getFinished());
                     ps.executeUpdate();
                     try (ResultSet rs = ps.getGeneratedKeys();) {
                         if (rs.next())
-                            race.setId(rs.getInt(1));
+                            Corrida.setId(rs.getInt(1));
                     }
                 } catch (SQLException e) {
                     return;
                 }
-                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO raceResults (Id,Position,Participant) VALUES (?,?,?) ");) {
-                    List<Participant> t = race.getResults();
+                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO CorridaResults (Id,Position,Registo) VALUES (?,?,?) ");) {
+                    List<Registo> t = Corrida.getResults();
                     for (int i = 0; i < t.size(); i++) {
-                        ps.setInt(1, race.getId());
+                        ps.setInt(1, Corrida.getId());
                         ps.setInt(2, i);
                         ps.setString(3, t.get(i).getManager().getNome());
                         ps.executeUpdate();
@@ -350,9 +350,9 @@ public class RaceDAO implements Map<Integer, Corrida> {
                 } catch (SQLException e) {
                     return;
                 }
-                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO raceReady (Id,Ready,Participant) VALUES (?,?,?) ");) {
-                    for (Entry<Participant, Boolean> e : race.getReady().entrySet()) {
-                        ps.setInt(1, race.getId());
+                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO CorridaReady (Id,Ready,Registo) VALUES (?,?,?) ");) {
+                    for (Entry<Registo, Boolean> e : Corrida.getReady().entrySet()) {
+                        ps.setInt(1, Corrida.getId());
                         ps.setBoolean(2, e.getValue());
                         ps.setString(3, e.getKey().getManager().getNome());
                         ps.executeUpdate();
@@ -372,9 +372,9 @@ public class RaceDAO implements Map<Integer, Corrida> {
     public void clear() {
         try ( Connection conn = DataBaseData.getConnection();
               Statement stm = conn.createStatement();){
-            stm.executeUpdate("DELETE FROM races;");
+            stm.executeUpdate("DELETE FROM Corridas;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);//TODO MUDAR ISTO
+            throw new RuntimeException(e);
         }
     }
     @Override
@@ -383,7 +383,7 @@ public class RaceDAO implements Map<Integer, Corrida> {
         try (
                 Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();
-                ResultSet rs = stm.executeQuery("SELECT Id FROM races;");
+                ResultSet rs = stm.executeQuery("SELECT Id FROM Corridas;");
         ){
             while(rs.next())
                 r.add(rs.getInt("Id"));
@@ -394,24 +394,24 @@ public class RaceDAO implements Map<Integer, Corrida> {
     }
 
     @Override
-    public Collection<Race> values() {
-        Collection<Race> r = new HashSet<Race>();
+    public Collection<Corrida> values() {
+        Collection<Corrida> r = new HashSet<Corrida>();
         try (
                 Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();
-                ResultSet rs = stm.executeQuery("SELECT Id,AdminHosting,WeatherVariability,Circuit,Finished FROM races;");
+                ResultSet rs = stm.executeQuery("SELECT Id,AdminHosting,WeatherVariability,Circuit,Finished FROM Corridas;");
         ){
 
                 while(rs.next()) {
                     int id =rs.getInt("Id");
                     boolean b = rs.getBoolean("Finished");
-                    r.add(new Race(
+                    r.add(new Corrida(
                             id,
                             AdminDAO.getInstance().get(rs.getString("AdminHosting")),
                             b,
                             new Weather(rs.getDouble("WeatherVariability")),
-                            CircuitDAO.getInstance().get(rs.getString("Circuit")),
-                            b ? participants(id) : new ArrayList<Participant>(),
+                            CircuitoDAO.getInstance().get(rs.getString("Circuit")),
+                            b ? Registos(id) : new ArrayList<Registo>(),
                             ready(id)
                     ));
                 }
@@ -422,8 +422,9 @@ public class RaceDAO implements Map<Integer, Corrida> {
     }
 
     @Override
-    public Set<Entry<Integer, Race>> entrySet() {
-        return values().stream().collect(
-                Collectors.toMap(x->x.getId(), x -> x)).entrySet();
+    public Set<Entry<Integer, Corrida>> entrySet() {
+        return values().stream()
+                       .collect(Collectors.toMap(x->x.getId(), x -> x))
+                       .entrySet();
     }
 }

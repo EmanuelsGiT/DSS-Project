@@ -1,21 +1,21 @@
 package DAOs;
 
-import src.Models.Utilizadores.Utilizador;
-import src.Models.Utilizadores.Jogador;
+import src.Models.Utilizadores.Registado;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PlayerDAO implements Map<String, Jogador> {
-    private static PlayerDAO singleton = null;
+public class RegistadoDAO implements Map<String, Registado> {
+    private static RegistadoDAO singleton = null;
 
-    private PlayerDAO() {
+    private RegistadoDAO() {
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS users (" +
                     "Username VARCHAR(255) NOT NULL PRIMARY KEY," +
-                    "Password CHAR(60) NOT NULL)";
+                    "Password CHAR(60) NOT NULL)," +
+                    "Pontuacao INT NOT NULL);";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
             // Erro a criar tabela...
@@ -24,11 +24,11 @@ public class PlayerDAO implements Map<String, Jogador> {
         }
     }
 
-    public static PlayerDAO getInstance() {
-        if (PlayerDAO.singleton == null) {
-            PlayerDAO.singleton = new PlayerDAO();
+    public static RegistadoDAO getInstance() {
+        if (RegistadoDAO.singleton == null) {
+            RegistadoDAO.singleton = new RegistadoDAO();
         }
-        return PlayerDAO.singleton;
+        return RegistadoDAO.singleton;
     }
 
     @Override
@@ -74,21 +74,21 @@ public class PlayerDAO implements Map<String, Jogador> {
 
     @Override
     public boolean containsValue(Object value) {
-        if (!(value instanceof Jogador)) return false;
-        Jogador p = (Jogador) value;
+        if (!(value instanceof Registado)) return false;
+        Registado p = (Registado) value;
         return p.equals(get(p.getNome()));
     }
 
     @Override
-    public Jogador get(Object key) {
+    public Registado get(Object key) {
         try (
                 Connection conn = DataBaseData.getConnection();
-                PreparedStatement ps = conn.prepareStatement("SELECT Username,Password FROM users WHERE Username= ?;");
+                PreparedStatement ps = conn.prepareStatement("SELECT Username,Password, Pontuacao FROM users WHERE Username= ?;");
         ) {
             ps.setString(1, key.toString());
             try (ResultSet rs = ps.executeQuery();) {
                 if (rs.next())
-                    return new Jogador(rs.getString(1), rs.getString(2));
+                    return new Registado(rs.getString(1), rs.getString(2), Integer.rs.getString(3)); //passar para int (mas ja e int na BD)
             }
         } catch (SQLException e) {
             // Database error!
@@ -99,13 +99,14 @@ public class PlayerDAO implements Map<String, Jogador> {
     }
 
     @Override
-    public Jogador put(String key, Jogador user) {
+    public Registado put(String key, Registado user) {
         try (
                 Connection conn = DataBaseData.getConnection();
-                PreparedStatement ps = conn.prepareStatement("INSERT INTO users (Username,Password) VALUES (?,?);");
+                PreparedStatement ps = conn.prepareStatement("INSERT INTO users (Username,Password,Pontuacao) VALUES (?,?,?);");
         ) {
             ps.setString(1, user.getNome());
             ps.setString(2, user.getPass());
+            ps.setString(3, user.getPontuacaoTotal());
             ps.executeUpdate();
             return user;
         } catch (SQLException e) {
@@ -113,18 +114,18 @@ public class PlayerDAO implements Map<String, Jogador> {
         }
     }
 
-    public Jogador put(Jogador u) {
+    public Registado put(Registado u) {
         return put(u.getNome(), u);
     }
 
     @Override
-    public Jogador remove(Object key) {
-        Jogador user = this.get(key);
+    public Registado remove(Object key) {
+        Registado user = this.get(key);
         if (user == null)
             return null;
         try (
                 Connection conn = DataBaseData.getConnection();
-                PreparedStatement ps = conn.prepareStatement("DELETE FROM users WHERE Username = ? AND Premium IS NULL;");
+                PreparedStatement ps = conn.prepareStatement("DELETE FROM users WHERE Username = ?;");
         ) {
             ps.setString(1, key.toString());
             ps.executeUpdate();
@@ -135,13 +136,14 @@ public class PlayerDAO implements Map<String, Jogador> {
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends Jogador> m) {
+    public void putAll(Map<? extends String, ? extends Registado> m) {
         try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
-            try (PreparedStatement stm = conn.prepareStatement("INSERT INTO users (Username,Password) VALUES (?,?);");) {
+            try (PreparedStatement stm = conn.prepareStatement("INSERT INTO users (Username,Password,Pontuacao) VALUES (?,?,?);");) {
                 for (Entry e : m.entrySet()) {
                     stm.setString(1, (String) e.getKey());
-                    stm.setString(2, ((Jogador) e.getValue()).getPass());
+                    stm.setString(2, ((Registado) e.getValue()).getPass());
+                    stm.setString(3, (String) Integer.e.getValue()).getPontuacaoTotal();
                     stm.executeUpdate();
                 }
             }
@@ -158,9 +160,9 @@ public class PlayerDAO implements Map<String, Jogador> {
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
         ) {
-            stm.executeUpdate("DELETE FROM users WHERE Premium IS NULL;");
+            stm.executeUpdate("DELETE FROM users;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);//TODO MUDAR ISTO
+            throw new RuntimeException(e);
         }
     }
 
@@ -169,7 +171,7 @@ public class PlayerDAO implements Map<String, Jogador> {
         Set<String> r = new HashSet<String>();
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT Username FROM users WHERE Premium IS NULL;");
+             ResultSet rs = stm.executeQuery("SELECT Username FROM users;");
         ){
             while (rs.next())
                 r.add(rs.getString(1));
@@ -180,14 +182,14 @@ public class PlayerDAO implements Map<String, Jogador> {
     }
 
     @Override
-    public Collection<Jogador> values() {
-        Collection<Jogador> r = new HashSet<Jogador>();
+    public Collection<Registado> values() {
+        Collection<Registado> r = new HashSet<Registado>();
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT Username,Password FROM users WHERE Premium IS NULL;");
+             ResultSet rs = stm.executeQuery("SELECT Username,Password,Pontuacao FROM users;");
         ){
             while (rs.next())
-                r.add(new Jogador(rs.getString(1), rs.getString(2)));
+                r.add(new Registado(rs.getString(1), rs.getString(2), Integer.(rs.getString(3))));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -196,8 +198,8 @@ public class PlayerDAO implements Map<String, Jogador> {
     }
 
     @Override
-    public Set<Entry<String, Jogador>> entrySet() {
+    public Set<Entry<String, Registado>> entrySet() {
         return values().stream().collect(
-                Collectors.toMap(Utilizador::getNome, x -> x)).entrySet();
+                Collectors.toMap(Registado::getNome, x -> x)).entrySet();
     }
 }

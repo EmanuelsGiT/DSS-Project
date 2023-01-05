@@ -96,10 +96,6 @@ public class CarroDAO implements Map<Integer, Carro> {
                     String marca = rs.getString("Marca");
                     int cilindrada = rs.getInt("Cilindrada");
 
-
-
-
-
                     Class<? extends CarClass> cc = (Class<? extends CarClass>) Class.forName(rs.getString("Class"));
                     CarClass c = (CarClass)cc.getMethod("getInstance").invoke(null, null);
                     Tyre tyre = new Tyre(Tyre.TyreType.valueOf(rs.getString("Tyre")));
@@ -246,7 +242,7 @@ public class CarroDAO implements Map<Integer, Carro> {
         ) {
             stm.executeUpdate("DELETE FROM cars;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);//TODO MUDAR ISTO
+            throw new RuntimeException(e);
         }
     }
 
@@ -297,8 +293,9 @@ public class CarroDAO implements Map<Integer, Carro> {
 
     @Override
     public Set<Entry<Integer, Carro>> entrySet() {
-        return values().stream().collect(
-                Collectors.toMap(Carro::getId, x -> x)).entrySet();
+        return values().stream()
+                       .collect(Collectors.toMap(Carro::getId, x -> x))
+                       .entrySet();
     }
 
 

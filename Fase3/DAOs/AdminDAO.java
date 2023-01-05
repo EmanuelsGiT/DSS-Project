@@ -153,7 +153,7 @@ public class AdminDAO implements Map<String,Administrador> {
                 Statement stm = conn.createStatement();) {
             stm.executeUpdate("DELETE FROM users;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);//TODO MUDAR ISTO
+            throw new RuntimeException(e);
         }
     }
 

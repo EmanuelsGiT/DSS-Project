@@ -1,26 +1,26 @@
 package DAOs;
 
-import src.Models.participants.Participant;
+import src.Models.Campeonatos.Registo;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ParticipantDAO implements Map<String, Participant> {
+public class RegistoDAO implements Map<String, Registo> {
 
-    private static ParticipantDAO singleton = null;
+    private static RegistoDAO singleton = null;
 
-    private ParticipantDAO() {
+    private RegistoDAO() {
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
-            String sql = "CREATE TABLE IF NOT EXISTS participants (" +
-                    "Player VARCHAR(255) NOT NULL PRIMARY KEY," +
-                    "Car INT NOT NULL UNIQUE," +
-                    "Driver VARCHAR(50) NOT NULL UNIQUE," +
-                    "NumberOfSetupChanges INT NOT NULL,"+
-                    "FOREIGN KEY (Player) REFERENCES users(Username) ON DELETE CASCADE ON UPDATE CASCADE," +
-                    "FOREIGN KEY (Car) REFERENCES cars(id) ON DELETE CASCADE ON UPDATE CASCADE," +
-                    "FOREIGN KEY (Driver) REFERENCES drivers(DriverName) ON DELETE CASCADE ON UPDATE CASCADE" +
+            String sql = "CREATE TABLE IF NOT EXISTS Registos (" +
+                    "Registo VARCHAR(255) NOT NULL PRIMARY KEY," +
+                    "CarroSetup INT NOT NULL UNIQUE," +
+                    "Piloto VARCHAR(50) NOT NULL UNIQUE," +
+                    "NumAfinacoes INT NOT NULL,"+
+                    "FOREIGN KEY (Registo) REFERENCES users(Username) ON DELETE CASCADE ON UPDATE CASCADE," +
+                    "FOREIGN KEY (CarroSetup) REFERENCES CarroSetups(id) ON DELETE CASCADE ON UPDATE CASCADE," +
+                    "FOREIGN KEY (Piloto) REFERENCES Pilotos(PilotoName) ON DELETE CASCADE ON UPDATE CASCADE" +
                     ");";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
@@ -30,11 +30,11 @@ public class ParticipantDAO implements Map<String, Participant> {
         }
     }
 
-    public static ParticipantDAO getInstance() {
-        if (ParticipantDAO.singleton == null) {
-            ParticipantDAO.singleton = new ParticipantDAO();
+    public static RegistoDAO getInstance() {
+        if (RegistoDAO.singleton == null) {
+            RegistoDAO.singleton = new RegistoDAO();
         }
-        return ParticipantDAO.singleton;
+        return RegistoDAO.singleton;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ParticipantDAO implements Map<String, Participant> {
         int i = 0;
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT count(*) FROM participants;")) {
+             ResultSet rs = stm.executeQuery("SELECT count(*) FROM Registos;")) {
             if (rs.next())
                 i = rs.getInt(1);
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class ParticipantDAO implements Map<String, Participant> {
     public boolean containsKey(Object key) {
         boolean r=false;
         try (Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT Player FROM participants WHERE Player= ?;");){
+            PreparedStatement ps = conn.prepareStatement("SELECT Registo FROM Registos WHERE Registo= ?;");){
             ps.setString(1,key.toString());
             try (ResultSet rs = ps.executeQuery();) {
                 if (rs.next())
@@ -77,17 +77,17 @@ public class ParticipantDAO implements Map<String, Participant> {
     }
 
     @Override
-    public Participant get(Object key) {
+    public Registo get(Object key) {
         try (Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT Player,Car,Driver,NumberOfSetupChanges FROM participants WHERE Player= ?;");){
+            PreparedStatement ps = conn.prepareStatement("SELECT Registo,CarroSetup,Piloto,NumAfinacoes FROM Registos WHERE Registo= ?;");){
             ps.setString(1,(String)key);
             try (ResultSet rs = ps.executeQuery();){
                 if (rs.next())
-                    return new Participant(
-                        rs.getInt("NumberOfSetupChanges"),
-                        RaceCarDAO.getInstance().get(rs.getInt("Car")),
-                        PilotoDAO.getInstance().get(rs.getString("Driver")),
-                        PlayerDAO.getInstance().get(rs.getString("Player"))
+                    return new Registo(
+                        rs.getInt("NumAfinacoes"),
+                        CarroSetupDAO.getInstance().get(rs.getInt("CarroSetup")),
+                        RegistadoDAO.getInstance().get(rs.getString("Piloto")),
+                        RegistadoDAO.getInstance().get(rs.getString("Registo"))
                         );
             }
         } catch (SQLException e) {
@@ -100,21 +100,21 @@ public class ParticipantDAO implements Map<String, Participant> {
 
     @Override
     public boolean containsValue(Object value) {
-        if (!(value instanceof Participant)) return false;
-        Participant p = (Participant) value;
+        if (!(value instanceof Registo)) return false;
+        Registo p = (Registo) value;
         return p.equals(get(p.getManager().getNome()));
     }
 
     @Override
-    public Participant put(String key, Participant part) {
+    public Registo put(String key, Registo part) {
         try (
             Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO participants (Player,Car,Driver,NumberOfSetupChanges) VALUES (?,?,?,?);");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO Registos (Registo,CarroSetup,Piloto,NumAfinacoes) VALUES (?,?,?,?);");
             ){
             ps.setString(1, key);
-            ps.setInt(2,part.getCar().getId());
-            ps.setString(3,part.getDriver().getDriverName());
-            ps.setInt(4,part.getNumberOfSetupChanges());
+            ps.setInt(2,part.getCarroSetup().getId());
+            ps.setString(3,part.getPiloto().getPilotoName());
+            ps.setInt(4,part.getNumAfinacoes());
             ps.executeUpdate();
             return part;
         } catch (SQLException e) {
@@ -122,18 +122,18 @@ public class ParticipantDAO implements Map<String, Participant> {
         }
     }
 
-    public Participant put(Participant part) {
+    public Registo put(Registo part) {
         return this.put(part.getManager().getNome(),part);
     }
 
-    public Participant update(Participant part) {
+    public Registo update(Registo part) {
         try (
             Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("UPDATE participants SET Car=?,Driver=?,NumberOfSetupChanges=? WHERE Player=?;");
+            PreparedStatement ps = conn.prepareStatement("UPDATE Registos SET CarroSetup=?,Piloto=?,NumAfinacoes=? WHERE Registo=?;");
             ){
-            ps.setInt(1,part.getCar().getId());
-            ps.setString(2,part.getDriver().getDriverName());
-            ps.setInt(3,part.getNumberOfSetupChanges());
+            ps.setInt(1,part.getCarroSetup().getId());
+            ps.setString(2,part.getPiloto().getPilotoName());
+            ps.setInt(3,part.getNumAfinacoes());
             ps.setString(4,part.getManager().getNome());
             ps.executeUpdate();
             return part;
@@ -143,13 +143,13 @@ public class ParticipantDAO implements Map<String, Participant> {
     }
 
     @Override
-    public Participant remove(Object key) {
-        Participant value = this.get(key);
+    public Registo remove(Object key) {
+        Registo value = this.get(key);
         if (value==null)
             return null;
         try (
             Connection conn = DataBaseData.getConnection();
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM participants WHERE Player = ?;");
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Registos WHERE Registo = ?;");
             ){
             ps.setString(1,(key.toString()));
             ps.executeUpdate();
@@ -160,15 +160,15 @@ public class ParticipantDAO implements Map<String, Participant> {
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends Participant> m) {
+    public void putAll(Map<? extends String, ? extends Registo> m) {
         try (Connection conn = DataBaseData.getConnection();){
             conn.setAutoCommit(false);
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO participants (Player,Car,Driver,NumberOfSetupChanges) VALUES (?,?,?,?);");) {
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Registos (Registo,CarroSetup,Piloto,NumAfinacoes) VALUES (?,?,?,?);");) {
                 for (Map.Entry e : m.entrySet()) {
                     ps.setString(1, ((String) e.getKey()));
-                    ps.setInt(2, ((Participant) e.getValue()).getCar().getId());
-                    ps.setString(3, ((Participant) e.getValue()).getDriver().getDriverName());
-                    ps.setInt(4, ((Participant) e.getValue()).getNumberOfSetupChanges());
+                    ps.setInt(2, ((Registo) e.getValue()).getCarroSetup().getId());
+                    ps.setString(3, ((Registo) e.getValue()).getPiloto().getPilotoName());
+                    ps.setInt(4, ((Registo) e.getValue()).getNumAfinacoes());
                     ps.executeUpdate();
                 }
             }
@@ -183,9 +183,9 @@ public class ParticipantDAO implements Map<String, Participant> {
     public void clear() {
         try ( Connection conn = DataBaseData.getConnection();
               Statement stm = conn.createStatement();){
-            stm.executeUpdate("DELETE FROM participants;");
+            stm.executeUpdate("DELETE FROM Registos;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);//TODO MUDAR ISTO
+            throw new RuntimeException(e);
         }
     }
     
@@ -195,10 +195,10 @@ public class ParticipantDAO implements Map<String, Participant> {
         try (
             Connection conn = DataBaseData.getConnection();
             Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT Player FROM participants;");
+            ResultSet rs = stm.executeQuery("SELECT Registo FROM Registos;");
             ){
                 while(rs.next())
-                    r.add(rs.getString("Player"));
+                    r.add(rs.getString("Registo"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -206,19 +206,19 @@ public class ParticipantDAO implements Map<String, Participant> {
     }
 
     @Override
-    public Collection<Participant> values() {
-        Collection<Participant> r = new HashSet<Participant>();
+    public Collection<Registo> values() {
+        Collection<Registo> r = new HashSet<Registo>();
         try (
             Connection conn = DataBaseData.getConnection();
             Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT Player,Car,Driver,NumberOfSetupChanges FROM participants;");
+            ResultSet rs = stm.executeQuery("SELECT Registo,CarroSetup,Piloto,NumAfinacoes FROM Registos;");
             ){
             while(rs.next())
-                r.add(new Participant(
-                        rs.getInt("NumberOfSetupChanges"),
-                        RaceCarDAO.getInstance().get(rs.getInt("Car")),
-                        PilotoDAO.getInstance().get(rs.getString("Driver")),
-                        PlayerDAO.getInstance().get(rs.getString("Player"))
+                r.add(new Registo(
+                        rs.getInt("NumAfinacoes"),
+                        RaceCarroSetupDAO.getInstance().get(rs.getInt("CarroSetup")),
+                        RegistadoDAO.getInstance().get(rs.getString("Piloto")),
+                        RegistadoDAO.getInstance().get(rs.getString("Registo"))
                 ));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -227,8 +227,9 @@ public class ParticipantDAO implements Map<String, Participant> {
     }
 
     @Override
-    public Set<Entry<String, Participant>> entrySet() {
-        return values().stream().collect(
-                Collectors.toMap(x->x.getManager().getNome(), x -> x)).entrySet();
+    public Set<Entry<String, Registo>> entrySet() {
+        return values().stream()
+                       .collect(Collectors.toMap(x->x.getManager().getNome(), x -> x))
+                       .entrySet();
     }
 }

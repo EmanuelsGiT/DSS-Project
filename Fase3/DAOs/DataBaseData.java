@@ -1,11 +1,11 @@
 package DAOs;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PilotoManager;
 import java.sql.SQLException;
 
 public class DataBaseData {
-    private static final String DB_DRIVER = "jdbc:mysql";
+    private static final String DB_Piloto = "jdbc:mysql";
 
     private static final String DB_HOST = "localhost";
     private static final String DB_PORT = "3306";
@@ -14,13 +14,13 @@ public class DataBaseData {
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "mysql";
 
-    private static final String DB_URL = DB_DRIVER+"://"+DB_HOST+":"+DB_PORT+"/";
+    private static final String DB_URL = DB_Piloto+"://"+DB_HOST+":"+DB_PORT+"/";
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL + DB_DATABASE, DB_USER, DB_PASSWORD);
+        return PilotoManager.getConnection(DB_URL + DB_DATABASE, DB_USER, DB_PASSWORD);
     }
     public static Connection getConnectionNoDatabase() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        return PilotoManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
 
     public static String getDatabaseName() {

@@ -104,7 +104,7 @@ public class PilotoDAO implements Map<String, Piloto> {
 
 
     @Override
-    public Piloto put(String key, @NotNull Piloto piloto) {
+    public Piloto put(String key, Piloto piloto) {
         try (
             Connection conn = DataBaseData.getConnection();
             PreparedStatement ps = conn.prepareStatement("INSERT INTO pilotos (NomePiloto,PilotoCTS,PilotoSVA) VALUES (?,?,?);");){
@@ -118,7 +118,7 @@ public class PilotoDAO implements Map<String, Piloto> {
         }
     }
 
-    public Piloto put(@NotNull Piloto piloto) {
+    public Piloto put(Piloto piloto) {
         return this.put(piloto.getNome(), piloto);
     }
 
