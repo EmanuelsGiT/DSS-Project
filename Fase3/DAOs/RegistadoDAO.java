@@ -18,7 +18,6 @@ public class RegistadoDAO implements Map<String, Registado> {
                     "Pontuacao INT NOT NULL);";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -40,7 +39,6 @@ public class RegistadoDAO implements Map<String, Registado> {
             if (rs.next())
                 i = rs.getInt(1);
         } catch (Exception e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -65,7 +63,6 @@ public class RegistadoDAO implements Map<String, Registado> {
                     r = true;
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -88,10 +85,9 @@ public class RegistadoDAO implements Map<String, Registado> {
             ps.setString(1, key.toString());
             try (ResultSet rs = ps.executeQuery();) {
                 if (rs.next())
-                    return new Registado(rs.getString(1), rs.getString(2), Integer.rs.getString(3)); //passar para int (mas ja e int na BD)
+                    return new Registado(rs.getString(1), rs.getString(2), rs.getInt(3)); //passar para int (mas ja e int na BD)
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -106,7 +102,7 @@ public class RegistadoDAO implements Map<String, Registado> {
         ) {
             ps.setString(1, user.getNome());
             ps.setString(2, user.getPass());
-            ps.setString(3, user.getPontuacaoTotal());
+            ps.setInt(3, user.getPontuacaoTotal());
             ps.executeUpdate();
             return user;
         } catch (SQLException e) {
@@ -143,7 +139,7 @@ public class RegistadoDAO implements Map<String, Registado> {
                 for (Entry e : m.entrySet()) {
                     stm.setString(1, (String) e.getKey());
                     stm.setString(2, ((Registado) e.getValue()).getPass());
-                    stm.setString(3, (String) Integer.e.getValue()).getPontuacaoTotal();
+                    stm.setInt(3, ((Registado) e.getValue()).getPontuacaoTotal());
                     stm.executeUpdate();
                 }
             }
@@ -189,7 +185,7 @@ public class RegistadoDAO implements Map<String, Registado> {
              ResultSet rs = stm.executeQuery("SELECT Username,Password,Pontuacao FROM users;");
         ){
             while (rs.next())
-                r.add(new Registado(rs.getString(1), rs.getString(2), Integer.(rs.getString(3))));
+                r.add(new Registado(rs.getString(1), rs.getString(2), rs.getInt(3)));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

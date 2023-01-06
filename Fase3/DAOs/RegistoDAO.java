@@ -24,7 +24,6 @@ public class RegistoDAO implements Map<String, Registo> {
                     ");";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -46,7 +45,6 @@ public class RegistoDAO implements Map<String, Registo> {
             if (rs.next())
                 i = rs.getInt(1);
         } catch (Exception e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -69,7 +67,6 @@ public class RegistoDAO implements Map<String, Registo> {
                     r=true;
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -85,13 +82,12 @@ public class RegistoDAO implements Map<String, Registo> {
                 if (rs.next())
                     return new Registo(
                         rs.getInt("NumAfinacoes"),
-                        CarroSetupDAO.getInstance().get(rs.getInt("CarroSetup")),
                         RegistadoDAO.getInstance().get(rs.getString("Piloto")),
                         RegistadoDAO.getInstance().get(rs.getString("Registo"))
+                        CarroSetupDAO.getInstance().get(rs.getInt("CarroSetup"))
                         );
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -113,7 +109,7 @@ public class RegistoDAO implements Map<String, Registo> {
             ){
             ps.setString(1, key);
             ps.setInt(2,part.getCarroSetup().getId());
-            ps.setString(3,part.getPiloto().getPilotoName());
+            ps.setString(3,part.getPiloto().getNome());
             ps.setInt(4,part.getNumAfinacoes());
             ps.executeUpdate();
             return part;
@@ -132,7 +128,7 @@ public class RegistoDAO implements Map<String, Registo> {
             PreparedStatement ps = conn.prepareStatement("UPDATE Registos SET CarroSetup=?,Piloto=?,NumAfinacoes=? WHERE Registo=?;");
             ){
             ps.setInt(1,part.getCarroSetup().getId());
-            ps.setString(2,part.getPiloto().getPilotoName());
+            ps.setString(2,part.getPiloto().getNome());
             ps.setInt(3,part.getNumAfinacoes());
             ps.setString(4,part.getManager().getNome());
             ps.executeUpdate();
@@ -167,7 +163,7 @@ public class RegistoDAO implements Map<String, Registo> {
                 for (Map.Entry e : m.entrySet()) {
                     ps.setString(1, ((String) e.getKey()));
                     ps.setInt(2, ((Registo) e.getValue()).getCarroSetup().getId());
-                    ps.setString(3, ((Registo) e.getValue()).getPiloto().getPilotoName());
+                    ps.setString(3, ((Registo) e.getValue()).getPiloto().getNome());
                     ps.setInt(4, ((Registo) e.getValue()).getNumAfinacoes());
                     ps.executeUpdate();
                 }
@@ -228,8 +224,7 @@ public class RegistoDAO implements Map<String, Registo> {
 
     @Override
     public Set<Entry<String, Registo>> entrySet() {
-        return values().stream()
-                       .collect(Collectors.toMap(x->x.getManager().getNome(), x -> x))
-                       .entrySet();
+        return values().stream().collect(
+                Collectors.toMap(x->x.getManager().getNome(), x -> x)).entrySet();
     }
 }
