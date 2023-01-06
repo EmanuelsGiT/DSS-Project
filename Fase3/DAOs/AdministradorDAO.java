@@ -6,10 +6,10 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AdminDAO implements Map<String,Administrador> {
-    private static AdminDAO singleton = null;
+public class AdministradorDAO implements Map<String,Administrador> {
+    private static AdministradorDAO singleton = null;
 
-    private AdminDAO() {
+    private AdministradorDAO() {
         try (
                 Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();
@@ -19,17 +19,16 @@ public class AdminDAO implements Map<String,Administrador> {
                     "Password CHAR(60) NOT NULL);";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
     }
 
-    public static AdminDAO getInstance() {
-        if (AdminDAO.singleton == null) {
-            AdminDAO.singleton = new AdminDAO();
+    public static AdministradorDAO getInstance() {
+        if (AdministradorDAO.singleton == null) {
+            AdministradorDAO.singleton = new AdministradorDAO();
         }
-        return AdminDAO.singleton;
+        return AdministradorDAO.singleton;
     }
 
     @Override
@@ -43,7 +42,6 @@ public class AdminDAO implements Map<String,Administrador> {
                 i = rs.getInt(1);
             }
         } catch (Exception e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -66,7 +64,6 @@ public class AdminDAO implements Map<String,Administrador> {
                     r = true;
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -127,12 +124,13 @@ public class AdminDAO implements Map<String,Administrador> {
         }
     }
 
+    
     @Override
     public void putAll(Map<? extends String, ? extends Administrador> m) {
         try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
             try (PreparedStatement stm = conn.prepareStatement("INSERT INTO users (Username,Password) VALUES (?,?);");) {
-                for (Entry e : m.entrySet()) {
+                for (final Entry e : m.entrySet()) {
                     stm.setString(1, (String) e.getKey());
                     stm.setString(2, ((Administrador) e.getValue()).getPass());
                     stm.executeUpdate();

@@ -42,7 +42,6 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                     ");";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
-            // Erro a criar tabela...
             e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
@@ -64,7 +63,6 @@ public class CorridaDAO implements Map<Integer, Corrida> {
             if (rs.next())
                 i = rs.getInt(1);
         } catch (Exception e) {
-            // Erro a criar tabela...
             e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
@@ -89,7 +87,6 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                     r=true;
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
@@ -107,7 +104,6 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                 }
             }
             } catch (SQLException e) {
-                // Database error!
                 e.printStackTCorrida();
                 throw new NullPointerException(e.getMessage());
             }
@@ -124,7 +120,6 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                 }
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
@@ -143,7 +138,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                     boolean b=rs.getBoolean("Finished");
                     return new Corrida(
                             rs.getInt("Id"),
-                            AdminDAO.getInstance().get(rs.getString("AdminHosting")),
+                            AdministradorDAO.getInstance().get(rs.getString("AdminHosting")),
                             b,
                             new Weather(rs.getDouble("WeatherVariability")),
                             CircuitoDAO.getInstance().get(rs.getString("Circuit")),
@@ -153,7 +148,6 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                 }
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTCorrida();
             throw new NullPointerException(e.getMessage());
         }
@@ -407,7 +401,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                     boolean b = rs.getBoolean("Finished");
                     r.add(new Corrida(
                             id,
-                            AdminDAO.getInstance().get(rs.getString("AdminHosting")),
+                            AdministradorDAO.getInstance().get(rs.getString("AdminHosting")),
                             b,
                             new Weather(rs.getDouble("WeatherVariability")),
                             CircuitoDAO.getInstance().get(rs.getString("Circuit")),
