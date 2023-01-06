@@ -12,6 +12,7 @@ public class Circuito {
     /**
      * Variáveis de instância
      */
+    private String nome;
     private double distancia;
     private int nVoltas;
     private int nChicanes;
@@ -24,6 +25,7 @@ public class Circuito {
      * Contrutor vazio/não parameterizado
      */
     public Circuito() {
+        this.nome = "";
         this.distancia = 0;
         this.nVoltas = 0;
         this.nChicanes = 0;
@@ -43,7 +45,8 @@ public class Circuito {
      * @param retasGDU
      * @param curvasGDU
      */
-    public Circuito(double distancia, int nVoltas, int nChicanes, int nCurvas, ArrayList<GDU> retasGDU, ArrayList<GDU> curvasGDU) {
+    public Circuito(String nome, double distancia, int nVoltas, int nChicanes, int nCurvas, ArrayList<GDU> retasGDU, ArrayList<GDU> curvasGDU) {
+        this.nome = nome;
         this.distancia = distancia;
         this.nVoltas = nVoltas;
         this.nChicanes = nChicanes;
@@ -58,6 +61,7 @@ public class Circuito {
      * @param circuito
      */
     public Circuito(Circuito circuito) {
+        this.nome = circuito.nome;
         this.distancia = circuito.distancia;
         this.nVoltas = circuito.nVoltas;
         this.nChicanes = circuito.nChicanes;
@@ -65,6 +69,10 @@ public class Circuito {
         this.nRetas = calcularNRetas(circuito.nChicanes, circuito.nCurvas);
         this.retasGDU = new ArrayList<>(circuito.getRetasGDU());
         this.curvasGDU = new ArrayList<>(circuito.getCurvasGDU());
+    }
+
+    public String getNome(){
+        return this.nome;
     }
 
     public double getDistancia() {
@@ -124,7 +132,7 @@ public class Circuito {
     }
 
     public int calcularNRetas(int nChicanes, int nCurvas) {
-        return nChicanes+nCurvas; // formula a toa
+        return nChicanes+nCurvas+1;
     }
 
     public Circuito clone() {
@@ -135,6 +143,7 @@ public class Circuito {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n - Circuito -");
+        sb.append("\nNome: ");sb.append(this.nome);
         sb.append("\nDistância: ");sb.append(this.distancia);
         sb.append("\nNúmero de voltas: ");sb.append(this.nVoltas);
         sb.append("\nNúmero de chicanes: ");sb.append(this.nChicanes);
