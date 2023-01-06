@@ -2,6 +2,9 @@ package src.Controllers;
 
 import UI.Menu;
 import src.Models.Campeonatos.Campeonato;
+import src.Models.Campeonatos.CampeonatoFacade;
+import src.Models.Campeonatos.Corrida;
+import src.Models.Campeonatos.ICampeonatos;
 import src.Models.Circuitos.Circuito;
 import src.Models.Circuitos.CircuitoFacade;
 import src.Models.Circuitos.ICircuitos;
@@ -17,19 +20,23 @@ import java.util.stream.Collectors;
 public class Controller {
 
     // Model
-    private IUtilizadores modelUtilizador;
-    private ICircuitos modelCircuto;
+    private final IUtilizadores modelUtilizador;
+    private final ICircuitos modelCircuto;
+    private final ICampeonatos modelCampeonato;
     // View
-    private UtilizadorView viewUtilizador;
-    private CircuitoView viewCircuito;
+    private final UtilizadorView viewUtilizador;
+    private final CircuitoView viewCircuito;
     // Scanner
     private static final Scanner sc = new Scanner(System.in);
 
     public Controller() {
         this.modelUtilizador = new UtilizadorFacade();
-        this.viewUtilizador = new UtilizadorView();
         this.modelCircuto = new CircuitoFacade();
+        this.modelCampeonato = new CampeonatoFacade();
+
+        this.viewUtilizador = new UtilizadorView();
         this.viewCircuito = new CircuitoView();
+
     }
 
     public void run() {
@@ -117,7 +124,7 @@ public class Controller {
             }
         } while (op != 0);
 
-        Campeonato c = new Campeonato();
-        // CORRIDAS ? CIRCUITOS ?
+        Campeonato c = new Campeonato(nome, circuitosEscolhidos.stream().map(Corrida::new).collect(Collectors.toCollection(ArrayList::new)));
+        this.modelCampeonato.adicionarCampeonato(c);
     }
 }

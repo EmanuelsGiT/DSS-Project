@@ -27,6 +27,12 @@ public class Corrida {
         this.resultados = new HashMap<>();
     }
 
+    public Corrida(Circuito circuito) {
+        this.circuito = circuito.clone();
+        this.clima = null;
+        this.resultados = new HashMap<>();
+    }
+
     /**
      * Contrutor não parameterizado
      * @param circuito
