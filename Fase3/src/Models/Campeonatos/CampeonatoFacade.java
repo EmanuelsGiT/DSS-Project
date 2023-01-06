@@ -6,8 +6,12 @@ import java.util.Map;
 import src.Models.Campeonatos.CarroSetup;
 
 public class CampeonatoFacade implements ICampeonatos {
-    
-     /**
+    @Override
+    public void adicionarCampeonato(Campeonato c) {
+
+    }
+
+    /**
      * Variáveis de instância
      */
 

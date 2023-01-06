@@ -1,6 +1,9 @@
 package UI;
 
+import src.Models.Circuitos.Circuito;
+
 import java.util.*;
+import java.lang.reflect.Type;
 
 public class Menu {
 
@@ -130,7 +133,7 @@ public class Menu {
     public void runOnce() {
         int op;
         show();
-        op = readOption();
+        op = Menu.readOption(this.opcoes.size());
         // testar pré-condição
         if (op>0 && !this.disponivel.get(op-1).validate()) {
             System.out.println("Opção indisponível!");
@@ -149,7 +152,7 @@ public class Menu {
         int op;
         do {
             show();
-            op = readOption();
+            op = Menu.readOption(this.opcoes.size());
             // testar pré-condição
             if (op>0 && !this.disponivel.get(op-1).validate()) {
                 System.out.println("Opção indisponível! Tente novamente.");
@@ -201,7 +204,7 @@ public class Menu {
     }
 
     /** Ler uma opção válida */
-    private int readOption() {
+    public static int readOption(int nOpcoes) {
         int op;
 
         System.out.print("Opção: ");
@@ -212,7 +215,7 @@ public class Menu {
         catch (NumberFormatException e) { // Não foi inscrito um int
             op = -1;
         }
-        if (op<0 || op>this.opcoes.size()) {
+        if (op < 0 || op > nOpcoes) {
             System.out.println("Opção Inválida!!!");
             op = -1;
         }
@@ -224,14 +227,15 @@ public class Menu {
     }
 
     public static String lerNome() {
-        System.out.println("Nome do utilizador: ");
-        String nome = is.nextLine();
-        return nome;
+        return lerLinha("Nome do utilizador:");
     }
 
     public static String lerPalavraPasse() {
-        System.out.println("Palavra-passe: ");
-        String palavraPasse = is.nextLine();
-        return palavraPasse;
+        return lerLinha("Palavra-passe");
+    }
+
+    public static String lerLinha(String texto) {
+        System.out.println(texto);
+        return is.nextLine();
     }
 }

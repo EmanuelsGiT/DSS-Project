@@ -29,6 +29,12 @@ public class Registado extends Jogador {
         this.pontuacaoTotal = pontuacaoTotal;
     }
 
+    public Registado(String nome, String pass) {
+        super(nome);
+        this.pass = pass;
+        this.pontuacaoTotal = 0;
+    }
+
     /**
      * Construtor de cópia
      * @param registado

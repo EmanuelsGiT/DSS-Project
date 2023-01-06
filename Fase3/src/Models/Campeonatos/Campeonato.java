@@ -27,6 +27,12 @@ public class Campeonato {
         this.registos = new HashMap<>();
     }
 
+    public Campeonato(String nome, ArrayList<Corrida> corridas) {
+        this.nome = nome;
+        this.corridas = new ArrayList<>(corridas);
+        this.registos = new HashMap<>();
+    }
+
     public Campeonato(String nome, ArrayList<Corrida> corridas, HashMap<String, Registo> registos) {
         this.nome = nome;
         this.corridas = new ArrayList<>(corridas);

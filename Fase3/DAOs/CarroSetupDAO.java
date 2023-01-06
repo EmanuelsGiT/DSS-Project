@@ -7,13 +7,14 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CarroDAO implements Map<Integer, Carro> {
-    private static CarroDAO singleton = null;
+public class CarroSetupDAO implements Map<Integer, Carro> {
+    private static CarroSetupDAO singleton = null;
 
-    private CarroDAO() {
+    private CarroSetupDAO() {
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS carros (" +
+                    //"ID INT NOT NULL," +
                     "Marca VARCHAR(25) NOT NULL," +
                     "Modelo VARCHAR(50) NOT NULL PRIMARY KEY," +
                     "Cilindrada INT NOT NULL," +
@@ -28,11 +29,11 @@ public class CarroDAO implements Map<Integer, Carro> {
         }
     }
 
-    public static CarroDAO getInstance() {
-        if (CarroDAO.singleton == null) {
-            CarroDAO.singleton = new CarroDAO();
+    public static CarroSetupDAO getInstance() {
+        if (CarroSetupDAO.singleton == null) {
+            CarroSetupDAO.singleton = new CarroSetupDAO();
         }
-        return CarroDAO.singleton;
+        return CarroSetupDAO.singleton;
     }
 
     @Override
@@ -69,7 +70,6 @@ public class CarroDAO implements Map<Integer, Carro> {
                     r = true;
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
