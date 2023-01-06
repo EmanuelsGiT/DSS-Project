@@ -38,6 +38,7 @@ public class Circuito {
     /**
      * Construtor parameterizado
      * Não recebe número de resto visto que este é calculado automaticamente a partir do número de chicanes e curvas
+     * @param nome
      * @param distancia
      * @param nVoltas
      * @param nChicanes
@@ -103,6 +104,10 @@ public class Circuito {
         return new ArrayList<>(this.curvasGDU);
     }
 
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+    
     public void setDistancia(double distancia) {
         this.distancia = distancia;
     }
