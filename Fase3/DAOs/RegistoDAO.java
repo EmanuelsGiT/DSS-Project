@@ -83,7 +83,7 @@ public class RegistoDAO implements Map<String, Registo> {
                     return new Registo(
                         rs.getInt("NumAfinacoes"),
                         RegistadoDAO.getInstance().get(rs.getString("Piloto")),
-                        RegistadoDAO.getInstance().get(rs.getString("Registo"))
+                        RegistadoDAO.getInstance().get(rs.getString("Registo")),
                         CarroSetupDAO.getInstance().get(rs.getInt("CarroSetup"))
                         );
             }
