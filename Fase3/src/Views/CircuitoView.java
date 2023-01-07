@@ -21,15 +21,7 @@ public class CircuitoView {
 
     }
     
-    public void utilizadorJaRegistado() {
-       System.out.println("Este utilizador já se encontra registado!");
-    }
-
-    public void sucessoAutenticacao() {
-        System.out.println("Autenticado com sucesso!");
-    }
-
-    public void insucessoAutenticacao() {
-        System.out.println("Erro ao autenticar!");
+  public void sucessoAdicionarCircuito() {
+       System.out.println("Circuito adicionado com sucesso!");
     }
 }
