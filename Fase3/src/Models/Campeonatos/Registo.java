@@ -1,5 +1,7 @@
 package src.Models.Campeonatos;
 
+import src.Models.Campeonatos.CarroSetup.ModoMotor;
+import src.Models.Campeonatos.CarroSetup.Pneus;
 import src.Models.Pilotos.Piloto;
 import src.Models.Utilizadores.Jogador;
 
@@ -72,6 +74,12 @@ public class Registo {
 
     public void incrementaNumAfinacoes() {
         this.numAfinacoes += 1;
+    }
+
+    public void alteraAfinacao(Pneus pneus, ModoMotor motor){
+        this.carroSetup.alteraPneus(pneus);
+        this.carroSetup.alteraModoMotor(motor);
+        //RegistoDAO.getInstance(this.getCampeonato()).update(this);
     }
 
     @Override

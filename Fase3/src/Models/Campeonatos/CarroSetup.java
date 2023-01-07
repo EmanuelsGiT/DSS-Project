@@ -88,6 +88,14 @@ public class CarroSetup {
         return (this.pac >= 0 && this.pac <=1 );
     }
 
+    public void alteraPneus(Pneus pneus) {
+
+    }
+
+    public void alteraModoMotor(ModoMotor motor) {
+        
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

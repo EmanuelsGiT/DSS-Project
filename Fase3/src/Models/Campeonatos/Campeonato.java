@@ -6,9 +6,14 @@ import src.Models.Utilizadores.Registado;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import DAOs.RegistadoDAO;
 import DAOs.RegistoDAO;
+import src.Models.Campeonatos.CarroSetup.ModoMotor;
+import src.Models.Campeonatos.CarroSetup.Pneus;
+import src.Models.Carros.Carro;
 import src.Models.Pilotos.Piloto;
 
 
@@ -50,11 +55,29 @@ public class Campeonato {
     }
 
     public ArrayList<Corrida> getCorridas() {
-        return new ArrayList<>(this.corridas);
+        if (corridas==null) {
+            corridas = CorridaDAO.getInstance(nome)
+                                 .values()
+                                 .stream()
+                                 .map(Corrida::clone)
+                                 .collect(Collectors.toList());
+        }
+        return (ArrayList<Corrida>) corridas.stream().map(Corrida::clone).collect(Collectors.toList());
     }
 
+        
     public HashMap<String, Registo> getRegistos() {
-        return new HashMap<>(this.registos);
+        if(registos == null) {
+            registos=RegistoDAO.getInstance(nome)
+                                   .entrySet()
+                                   .stream()
+                                   .collect(Collectors.toMap(Map.Entry::getKey, e->e.getValue().clone()));
+        }
+
+        return (HashMap<String,Registo>)
+               registos.entrySet()
+                       .stream()
+                       .collect(Collectors.toMap(Map.Entry::getKey, e->e.getValue().clone()));
     }
 
     public void setNome(String nome) {
@@ -67,28 +90,6 @@ public class Campeonato {
 
     public void setRegistos(HashMap<String, Registo> registos) {
         this.registos = new HashMap<>(registos);
-    }
-
-    //vou fazer ja para cobrir os DAOS 
-    // Exceptions --> 
-    public void regista(String nomeJogador, Piloto piloto, Carro carro) {
-        Jogador jog = RegistadoDAO.getInstance().get(nomeJogador);
-        if (jog == null) {
-            //exception jogador n existe
-        }
-        if (RegistoDAO.getInstance(this.nome).get(nomeJogador) != null) { 
-            // exception jogador ja esta registado
-        }
-        RegistoDAO.getInstance(this.nome).put(jog,new Registo(0, piloto, jog, new CarroSetup(carro)));
-            
-    }
-    
-    
-    public boolean validaAfinacao(String nomeJogador) {
-        Registo r = this.registos.get(nomeJogador);
-        int numAfinacoes = r.getNumAfinacoes();
-        
-        return (numAfinacoes <= (2/3)*this.corridas.size());
     }
 
     public Campeonato clone() {
@@ -107,15 +108,58 @@ public class Campeonato {
         this.registos.put(nomeJogador, new Registo(0, piloto, anonimo, carroSetup));
     }
 
-    public HashMap<Registo, Integer> calculaClassificacaoFinal() {
-        HashMap<Registo, Integer> classificacaoFinal = new HashMap<>();
-        for (Registo r : this.registos.values()) { 
-            Jogador jog = r.getJogador();
-            if(jog instanceof Registado) {
-                classificacaoFinal.put(r, ((Registado)jog).getPontuacaoTotal()); 
-            }
+        // Se o jogador for Anonimo RIP TO:DO
+    // Exceptions --> 
+    public void criaRegisto(String nomeJogador, Piloto piloto, Carro carro) {
+        Jogador jog = JogadorDAO.getInstance().get(nomeJogador);
+        if (jog == null) {
+            //exception jogador n existe
         }
-        return classificacaoFinal;
+        if (RegistoDAO.getInstance(this.nome).get(nomeJogador) != null) { 
+            // exception jogador ja esta registado
+        }
+        RegistoDAO.getInstance(this.nome).put(nomeJogador,new Registo(0, piloto, jog, new CarroSetup(carro)));
+            
+    }
+    
+    public boolean validarAfinacao(String nomeJogador) {
+        Registo r = getRegistos().get(nomeJogador);        
+        return (r.getNumAfinacoes() <= ( (double) 2/3)*getCorridas().size());
+    }
+
+    public void alteraAfinacao(String nomeJogador, Pneus pneus, ModoMotor motor) {
+        Registo r = getRegistos().get(nomeJogador);
+        r.alteraAfinacao(pneus, motor);
+    }
+
+
+    public Map<Registo,Integer> calculaClassificacaoFinal(){
+        Map<Registo,Integer> classificacoes = new HashMap<>();
+        for (Registo r :getRegistos().values())
+            classificacoes.put(r,0);
+        for (Corrida c: getCorridas()){
+            HashMap<String, Integer> ps = c.getResultados();
+            for (Map.Entry<String,Integer> e : ps.entrySet()){
+                    Registo reg = getRegistos().get(e.getKey());
+                    classificacoes.put(reg,classificacoes.get(reg)+e.getValue());
+                }
+        
+        }
+        return classificacoes;
+    }
+
+    public Map<Registo,Integer> getResultadosCorrida(int corrida) {
+        Map<Registo,Integer> classificacoes = new HashMap<>();
+        Map<String,Integer> results = getCorridas().get(corrida).getResultados();
+        
+        for (Registo r :getRegistos().values()) {
+            classificacoes.put(r,results.get(r.getJogador().getNome()));
+        }
+        return classificacoes;
+    }
+
+    public void prepararCorrida(String nomeJogador, int corrida) {
+        Corrida c = getCorridas().get(corrida);
     }
 
     @Override

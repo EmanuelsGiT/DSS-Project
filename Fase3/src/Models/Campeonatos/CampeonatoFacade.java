@@ -3,13 +3,14 @@ package src.Models.Campeonatos;
 import java.util.HashMap;
 import java.util.Map;
 
+import DAOs.CampeonatoDAO;
 import src.Models.Campeonatos.CarroSetup;
+import src.Models.Campeonatos.CarroSetup.ModoMotor;
+import src.Models.Campeonatos.CarroSetup.Pneus;
+import src.Models.Carros.Carro;
+import src.Models.Pilotos.Piloto;
 
 public class CampeonatoFacade implements ICampeonatos {
-    @Override
-    public void adicionarCampeonato(Campeonato c) {
-
-    }
 
     /**
      * Variáveis de instância
@@ -23,43 +24,60 @@ public class CampeonatoFacade implements ICampeonatos {
      }
 
      private Campeonato getCampeonato(String nomeCampeonato) {
-          Campeonato c = CampeonatoDAO
+          Campeonato c = CampeonatoDAO.getInstance().get(nomeCampeonato);
+          if (c == null);
+               //exception
+          
+          return c;
      }
 
 
      @Override
      public void adicionarCampeonato(Campeonato campeonato) {
-          this.campeonatos.put(campeonato.getNome(), campeonato);
+          CampeonatoDAO.getInstance().put(campeonato);
      }
 
      @Override
      // campeonatoNaoExistenteException
      public void removerCampeonato(String nomeCampeonato) {
-          this.campeonatos.remove(nomeCampeonato);
+          CampeonatoDAO.getInstance().remove(nomeCampeonato);
      }
 
      @Override
      public void registaJogador(String nomeJogador, String nomeCampeonato, Piloto piloto, Carro carro) {
           Campeonato c = this.campeonatos.get(nomeCampeonato);
-          c.regista(nomeJogador, piloto, carro);
+          c.criaRegisto(nomeJogador, piloto, carro);
      }
      
      @Override
      public void alteraAfinacao(String nomeCampeonato, String nomeJogador, Pneus pneus, ModoMotor motor, Float pac) {
-
+          Campeonato c = getCampeonato(nomeCampeonato);
+          c.alteraAfinacao(nomeJogador,pneus,motor);
      }
 
      @Override
-     public void validarAfinacao(String nomeJogador, String nomeCampeonato) {
-          Campeonato c = this.campeonatos
+     public boolean validarAfinacao(String nomeJogador, String nomeCampeonato) {
+          Campeonato c = getCampeonato(nomeCampeonato);
+          return c.validarAfinacao(nomeJogador);
      }
  
      @Override
-     public void getResultados(String nomeCampeonato);
+     // alterar return type
+     public Map<Registo,Integer> getResultados(String nomeCampeonato) {
+          Campeonato c = getCampeonato(nomeCampeonato);
+          return c.calculaClassificacaoFinal();
+     }
  
      @Override
-     public void prepararCorrida(String nomeCampeonato);
+     public void prepararCorrida(String nomeCampeonato, int corrida, String nomeJogador) {
+          Campeonato c = getCampeonato(nomeCampeonato);
+          c.prepararCorrida(nomeJogador, corrida);
+     }
  
      @Override
-     public void getResultadosCorrida(String nomeCampeonato, int corrida);
+     public Map<Registo,Integer> getResultadosCorrida(String nomeCampeonato, int corrida) {
+          Campeonato c = getCampeonato(nomeCampeonato);
+          return c.getResultadosCorrida(corrida);
+
+     }
 }
