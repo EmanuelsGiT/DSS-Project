@@ -10,7 +10,7 @@ public abstract class Utilizador {
      * Construtor vazio/não parameterizado
      */
     public Utilizador() {
-        this.nome = "";
+        this.nome = null;
     }
 
     /**

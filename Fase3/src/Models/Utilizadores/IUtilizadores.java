@@ -2,19 +2,11 @@ package src.Models.Utilizadores;
 
 public interface IUtilizadores {
     
-    public void registaUtilizador(Utilizador utilizador);
-
-    public void registaAdministrador(String nomeAdmin, String passAdmin);
-
-    public void registaJogador(String nome, String pass);
-
-    public void registaRegistado(String nome, String pass, int pontuacaoTotal);
-
-    public void registaAnonimo(String nome);
+    public void registaUtilizador(Utilizador utilizador) throws Exception;
 
     public boolean autenticaUtilizador(String nome, String pass);
 
-    public boolean utilizadorExiste(String nome, String pass);
+    public boolean utilizadorExiste(String nome);
 
 }
 

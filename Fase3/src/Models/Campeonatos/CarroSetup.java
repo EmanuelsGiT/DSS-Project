@@ -31,6 +31,13 @@ public class CarroSetup {
         this.modoMotor = modoMotor;
         this.carro = carro.clone(); 
     }
+    
+    public CarroSetup(Carro carro) {
+        this.pac = 0;
+        this.pneus = null;
+        this.modoMotor = null;
+        this.carro = carro;
+    }
 
     public CarroSetup(CarroSetup carroSetup) {
         this.pac = carroSetup.pac;
@@ -38,7 +45,7 @@ public class CarroSetup {
         this.modoMotor = carroSetup.modoMotor;
         this.carro = carroSetup.getCarro();
     }
-    
+
     public double getPac() {
         return this.pac;
     }
