@@ -17,6 +17,7 @@ public class Corrida {
     private Circuito circuito;
     private Clima clima;
     private HashMap<String, Integer> resultados; // key: nome do jogador; value: resultado da corrida
+    private HashMap<String, Boolean> jogadoresProntos;
 
     /**
      * Construtor vazio/não parameterizado
@@ -81,6 +82,23 @@ public class Corrida {
 
     public Corrida clone() {
         return new Corrida(this);
+    }
+
+    public void colocarPronto(String nomeJogador) {
+        this.jogadoresProntos.put(nomeJogador,true);
+    }
+
+    public boolean todosJogadoresProntos() {
+        for(Boolean b : jogadoresProntos.values()) {
+            if(!b)
+                return false;
+        }
+        return true;
+    }
+
+    public void simularCorrida() {
+        int voltas = this.circuito.getNVoltas();
+        
     }
 
     @Override

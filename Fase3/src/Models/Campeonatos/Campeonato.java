@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import DAOs.RegistadoDAO;
 import DAOs.RegistoDAO;
+import src.DAOsExclude.CorridaDAO;
 import src.Models.Campeonatos.CarroSetup.ModoMotor;
 import src.Models.Campeonatos.CarroSetup.Pneus;
 import src.Models.Carros.Carro;
@@ -28,8 +29,8 @@ public class Campeonato {
 
     public Campeonato() {
         this.nome = "";
-        this.corridas = new ArrayList<>();
-        this.registos = new HashMap<>();
+        this.corridas = CorridaDAO.getInstance();
+        this.registos = RegistoDAO.getInstance();
     }
 
     public Campeonato(String nome, ArrayList<Corrida> corridas) {
@@ -55,6 +56,18 @@ public class Campeonato {
     }
 
     public ArrayList<Corrida> getCorridas() {
+        return this.corridas;
+    }
+
+    public HashMap<String, Registo> getRegistos() {
+        return this.registos;
+    }
+
+    public Corrida getCorrida(int corrida) {
+        return this.corridas.get(corrida);
+    }
+    /* 
+    public ArrayList<Corrida> getCorridas() {
         if (corridas==null) {
             corridas = CorridaDAO.getInstance(nome)
                                  .values()
@@ -79,6 +92,7 @@ public class Campeonato {
                        .stream()
                        .collect(Collectors.toMap(Map.Entry::getKey, e->e.getValue().clone()));
     }
+    */
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -108,7 +122,7 @@ public class Campeonato {
         this.registos.put(nomeJogador, new Registo(0, piloto, anonimo, carroSetup));
     }
 
-        // Se o jogador for Anonimo RIP TO:DO
+       
     // Exceptions --> 
     public void criaRegisto(String nomeJogador, Piloto piloto, Carro carro) {
         Jogador jog = JogadorDAO.getInstance().get(nomeJogador);
@@ -123,24 +137,19 @@ public class Campeonato {
     }
     
     public boolean validarAfinacao(String nomeJogador) {
-        Registo r = getRegistos().get(nomeJogador);        
-        return (r.getNumAfinacoes() <= ( (double) 2/3)*getCorridas().size());
-    }
-
-    public void alteraAfinacao(String nomeJogador, Pneus pneus, ModoMotor motor) {
-        Registo r = getRegistos().get(nomeJogador);
-        r.alteraAfinacao(pneus, motor);
+        Registo r = this.registos.get(nomeJogador);        
+        return (r.getNumAfinacoes() <= ( (double) 2/3)*this.corridas.size());
     }
 
 
     public Map<Registo,Integer> calculaClassificacaoFinal(){
         Map<Registo,Integer> classificacoes = new HashMap<>();
-        for (Registo r :getRegistos().values())
+        for (Registo r :this.registos.values())
             classificacoes.put(r,0);
-        for (Corrida c: getCorridas()){
+        for (Corrida c: this.corridas){
             HashMap<String, Integer> ps = c.getResultados();
             for (Map.Entry<String,Integer> e : ps.entrySet()){
-                    Registo reg = getRegistos().get(e.getKey());
+                    Registo reg = this.registos.get(e.getKey());
                     classificacoes.put(reg,classificacoes.get(reg)+e.getValue());
                 }
         
@@ -150,25 +159,35 @@ public class Campeonato {
 
     public Map<Registo,Integer> getResultadosCorrida(int corrida) {
         Map<Registo,Integer> classificacoes = new HashMap<>();
-        Map<String,Integer> results = getCorridas().get(corrida).getResultados();
+        Map<String,Integer> results = this.corridas.get(corrida).getResultados();
         
-        for (Registo r :getRegistos().values()) {
+        for (Registo r : this.registos.values()) {
             classificacoes.put(r,results.get(r.getJogador().getNome()));
         }
         return classificacoes;
     }
 
+    /* 
     public void prepararCorrida(String nomeJogador, int corrida) {
-        Corrida c = getCorridas().get(corrida);
+        Corrida c = this.corridas.get(corrida);
+        c.colocarPronto(nomeJogador);
+
     }
+    */
+
+    public void criarCorrida(Corrida corrida) {
+        this.corridas.add(corrida);
+    }
+
+
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n - Campeonato -");
         sb.append("\nNome: ");sb.append(this.nome);
-        sb.append("\nCorridas: ");sb.append(this.getCorridas());
-        sb.append("\nRegistos: ");sb.append(this.getRegistos());
+        sb.append("\nCorridas: ");sb.append(this.corridas);
+        sb.append("\nRegistos: ");sb.append(this.registos);
         return sb.toString();
     }
 

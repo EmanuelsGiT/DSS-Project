@@ -5,9 +5,13 @@ import java.util.Map;
 import src.Models.Campeonatos.CarroSetup.ModoMotor;
 import src.Models.Campeonatos.CarroSetup.Pneus;
 import src.Models.Carros.Carro;
+import src.Models.Circuitos.Circuito;
 import src.Models.Pilotos.Piloto;
 
 public interface ICampeonatos {
+    
+    // Metodos para o admin adicionar/remover campeonato/corrida
+    
     
     public void adicionarCampeonato(Campeonato campeonato); // done
     
@@ -23,7 +27,11 @@ public interface ICampeonatos {
 
     public Map<Registo,Integer> getResultados(String nomeCampeonato); // done
 
-    public void prepararCorrida(String nomeCampeonato, int corrida, String nomeJogador); // ???????
-
     public Map<Registo,Integer> getResultadosCorrida(String nomeCampeonato, int corrida); // done
+
+    public void criarCorrida(String nomeCampeonato, Corrida corrida); // done ig
+
+    public void prepararCorrida(String nomeCampeonato, int corrida, String nomeJogador); // falta o simularCorrida()
+
+
 }
