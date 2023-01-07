@@ -49,7 +49,7 @@ public class Registo {
     }
 
     public CarroSetup getCarroSetup() {
-        return this.carroSetup.clone();
+        return this.carroSetup;
     }
 
     public void setNumAfinacoes(int numAfinacoes) {
@@ -75,13 +75,7 @@ public class Registo {
     public void incrementaNumAfinacoes() {
         this.numAfinacoes += 1;
     }
-
-    public void alteraAfinacao(Pneus pneus, ModoMotor motor){
-        this.carroSetup.alteraPneus(pneus);
-        this.carroSetup.alteraModoMotor(motor);
-        //RegistoDAO.getInstance(this.getCampeonato()).update(this);
-    }
-
+   
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
