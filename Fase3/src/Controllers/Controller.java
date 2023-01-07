@@ -28,15 +28,17 @@ public class Controller {
     // Model
     private final IUtilizadores modelUtilizador;
     private final ICircuitos modelCircuto;
-    private final ICampeonatos modelCampeonato;
     private final ICarros modelCarro;
     private final IPilotos modelPiloto;
+    private final ICampeonatos modelCampeonato;
+    
     // View
     private final UtilizadorView viewUtilizador;
     private final CircuitoView viewCircuito;
-    private final CampeonatoView viewCampeonato;
     private final PilotoView viewPiloto;
     private final CarroView viewCarro;
+    private final CampeonatoView viewCampeonato;
+    
 
     private String nomeUtilizador = null;
     // Scanner
@@ -45,15 +47,14 @@ public class Controller {
     public Controller() {
         this.modelUtilizador = new UtilizadorFacade();
         this.modelCircuto = new CircuitoFacade();
-        this.modelCampeonato = new CampeonatoFacade();
         this.modelCarro = new CarroFacade();
         this.modelPiloto = new PilotoFacade();
-
+        this.modelCampeonato = new CampeonatoFacade();
         this.viewUtilizador = new UtilizadorView();
         this.viewCircuito = new CircuitoView();
-        this.viewCampeonato = new CampeonatoView();
         this.viewPiloto = new PilotoView();
         this.viewCarro = new CarroView();
+        this.viewCampeonato = new CampeonatoView();
     }
 
     public void run() throws Exception {

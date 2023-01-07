@@ -25,6 +25,8 @@ public class CarroSetup {
     private Pneus pneus;
     private ModoMotor modoMotor;
     private Carro carro;
+    private boolean dnf;
+    private long tempo;
 
     public CarroSetup(double pac, Pneus pneus, ModoMotor modoMotor, Carro carro) {
         this.id = null;
@@ -95,9 +97,19 @@ public class CarroSetup {
     }
 
     
+    public Boolean getDNF() {
+        return this.dnf; 
+    }
+
+    public void setDNF(Boolean dnf) {
+        this.dnf = dnf;
+    }
+
+    
     public void setCarro(Carro carro) {
         this.carro = carro.clone(); 
     }
+
 
     public CarroSetup clone() {
         return new CarroSetup(this);
@@ -106,6 +118,21 @@ public class CarroSetup {
 
     public boolean validaPac() {
         return (this.pac >= 0 && this.pac <=1 );
+    }
+
+    
+    public boolean DNF(int volta,int totalvoltas,int clima){
+        return true;
+    }
+
+    public long getTempo()
+    {
+        return this.tempo;
+    }
+
+    public void setTempo(long tempo)
+    {
+        this.tempo = tempo;
     }
 
     @Override

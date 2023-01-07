@@ -1,14 +1,20 @@
 package src.Models.Campeonatos;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Collections;
+
 
 import src.Models.Circuitos.Circuito;
+import src.Models.Campeonatos.CarroSetup;
 
 public class Corrida {
-    
+
     public enum Clima {
         MOLHADO,
         SECO
@@ -22,6 +28,10 @@ public class Corrida {
     private Clima clima;
     private HashMap<String, Integer> resultados; // key: nome do jogador; value: resultado da corrida
     private HashMap<String, Boolean> jogadoresProntos;
+    private Map<CarroSetup, Integer> dnf;
+    private List<CarroSetup> primeiroVolta;
+    private List<CarroSetup> listaCarros;
+    //private Set<Carro> resultados;
 
     /**
      * Construtor vazio/não parameterizado
@@ -146,13 +156,93 @@ public class Corrida {
         }
         return true;
     }
-
-    public void simularCorrida() {
+    /*
+    public void simulaCorrida()
+    {
         int voltas = this.circuito.getNVoltas();
-        
+        long t_aux, t_volta;
+        ArrayList<CarroSetup> aux = new ArrayList<CarroSetup>();
+        HashMap<CarroSetup,Integer> temp = new HashMap<CarroSetup,Integer>();
+        for(CarroSetup c : this.listaCarros)
+        {
+            aux.add(c.clone());
+        }
+        for(int i=0; i<voltas; i++)
+        {
+            for(CarroSetup c : aux)
+            {
+                if(c.getDNF()==false) 
+                {
+                    if(c.DNF(i,voltas,0)==true) 
+                    {
+                        c.setDNF(true);
+                        temp.put(c.clone(),i);
+                    }
+                    else
+                    {
+                       t_aux = c.getTempo(); 
+                       if(c instanceof Hibrido)
+                       {
+                           Hibrido h = (Hibrido)c;
+                           int motor = h.getPotenciaMotorEletrico();
+                           t_volta = c.tempoProximaVolta(this.circuito, 0, i) - motor*10;
+                       }
+                       else
+                            t_volta = c.tempoProximaVolta(this.circuito, 0, i);
+                       c.setTempo(t_aux +t_volta); 
+                       if(this.circuito.getRecord().getTempo() > t_volta)
+                       {
+                           if(i<(this.circuito.getNVoltas()/2))
+                           {
+                                Record r = new Record(t_volta,c.getEquipa().getPiloto1(),c.clone());
+                                this.circuito.setRecord(r);
+                           }
+                           else
+                           {
+                               Record r = new Record(t_volta,c.getEquipa().getPiloto2(),c.clone());
+                               this.circuito.setRecord(r);
+                           }
+                       }
+                    }
+                }
+            }
+            this.primeiroVolta(i,aux);
+        }
+        for(CarroSetup c : aux)
+        {
+            if(c.getDNF()==false)
+            {
+                    this.resultados.add(c);
+            }
+        }
+        this.dnf = temp;
+    }*/
+    
+    private void primeiroVolta(int volta, List<CarroSetup> l)
+    {
+       //Collections.sort(l);
+       Iterator<CarroSetup> it = l.iterator();
+       boolean f = false;
+       CarroSetup c = null;
+       while(it.hasNext() && f==false)
+       {
+           c = it.next();
+           if(c.getDNF()==false)
+                f=true;
+       }
+       if(c!=null)
+            this.primeiroVolta.add(volta,c.clone());
     }
 
-
+    public Map<CarroSetup,Integer> getDNF()
+   {
+       HashMap<CarroSetup,Integer> aux = new HashMap<CarroSetup,Integer>();
+       for(CarroSetup c : this.dnf.keySet())
+       {
+           aux.put(c.clone(), this.dnf.get(c));
+        }
+        return aux;
+   }
 
     @Override
     public String toString() {
