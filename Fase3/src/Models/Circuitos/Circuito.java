@@ -4,9 +4,27 @@ import java.util.ArrayList;
 public class Circuito {
     
     public enum GDU {
-        POSSIVEL,
-        DIFICIL,
-        IMPOSSIVEL
+        POSSIVEL (0),
+        DIFICIL (1),
+        IMPOSSIVEL (2);
+
+        private int gduValue;
+
+        GDU(int gduValue) {this.gduValue = gduValue; }
+        public int getGduValue() {  return gduValue;}
+
+        public static GDU fromInt(int value) {
+            switch (value) {
+                case 0:
+                    return GDU.POSSIVEL;
+                case 1:
+                    return GDU.DIFICIL;
+                case 2:
+                    return GDU.IMPOSSIVEL;
+                default:
+                    throw new IllegalArgumentException("GDU invalido: " + value);
+            }
+        }
     }
 
     /**

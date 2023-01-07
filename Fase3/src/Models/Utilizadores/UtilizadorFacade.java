@@ -23,7 +23,7 @@ public class UtilizadorFacade implements IUtilizadores {
     @Override
     public void registaUtilizador(Utilizador utilizador) throws Exception {
         if (utilizadores.containsKey(utilizador.getNome())) {
-            throw new Exception("Este utilizador ja se encontra registado!");
+            System.out.println("Este utilizador ja se encontra registado");
         } else {
             if (utilizador.getClass().isAssignableFrom(Registado.class)) {
                 this.registados.put(utilizador.getNome(), (Registado) utilizador);

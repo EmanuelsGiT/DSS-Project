@@ -95,7 +95,16 @@ public class UtilizadorDAO implements Map<String, Utilizador> {
 
     @Override
     public void clear() {
-
+        try ( Connection conn = DataBaseData.getConnection();
+              Statement stm = conn.createStatement();){
+            stm.executeUpdate("DELETE FROM anonimos;");
+            stm.executeUpdate("DELETE FROM registados;");
+            stm.executeUpdate("DELETE FROM administradores;");
+            stm.executeUpdate("DELETE FROM jogadores;");
+            stm.executeUpdate("DELETE FROM utilizadores;");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

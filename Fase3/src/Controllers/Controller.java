@@ -119,6 +119,10 @@ public class Controller {
 
     private void adicionarCircuito() {
         String nome = Menu.lerLinha("Nome do circuito: ");
+        if (this.modelCircuto.existeCircuito(nome)) {
+            System.out.println("Ja existe um circuito com este nome, por favor insira outro nome!");
+            adicionarCircuito();
+        }
         Double distancia = Menu.lerDouble("Distancia do circuito: ");
         int nCurvas = Menu.lerInt("Numero de curvas: ");
         int nChicanes = Menu.lerInt("Numero de chicanes: ");
@@ -152,8 +156,9 @@ public class Controller {
         int nVoltas = Menu.lerInt("Numero de voltas: ");
 
         Circuito circuito = new Circuito(nome, distancia, nVoltas, nChicanes, nCurvas, new ArrayList<>(Arrays.asList(tt[1])), new ArrayList<>(Arrays.asList(tt[0])));
-
-        System.out.println("Circuito adicionado com sucesso!");
+        this.modelCircuto.adicionarCircuito(circuito);
+        System.out.println("Circuito " + circuito.getNome() + " adicionado com sucesso!");
+        System.out.println(circuito);
 
     }
 

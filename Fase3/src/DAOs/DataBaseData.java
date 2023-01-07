@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 public class DataBaseData {
     private static final String DB_Piloto = "jdbc:mariadb";
-
     private static final String DB_HOST = "localhost";
     private static final String DB_PORT = "3306";
     private static final String DB_DATABASE = "F1Manager";

@@ -1,32 +1,26 @@
 package src.Models.Circuitos;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import DAOs.CircuitoDAO;
+import src.DAOs.CircuitoDAO;
 
 public class CircuitoFacade implements ICircuitos {
 
     private Map<String,Circuito> circuitos;
 
     public CircuitoFacade(){
-        this.circuitos = CircuitoDAO.getinstance();
+        this.circuitos = CircuitoDAO.getInstance();
     }
 
-    private Circuito getCircuito(String nomeCircuito){
-        Circuito c = circuitos.get(nomeCircuito);
-        if (c==null);
-        return c;
+    public Circuito getCircuito(String nome){
+        return circuitos.get(nome);
     }
 
     @Override
     public void adicionarCircuito(Circuito circuito) {
-        circuitos.put(circuito);
-    }
-
-    @Override
-    public void adicionarCircuito(String nome,double distancia, int nVoltas, int nChicanes, int nCurvas, int nRetas, ArrayList<Circuito.GDU> retasGDU, ArrayList<Circuito.GDU> curvasGDU) {
-        adiconarCircuito(new Circuito(nome, distancia, nVoltas, nChicanes, nCurvas, nRetas, retasGDU, curvasGDU));
+        circuitos.put(circuito.getNome(), circuito);
     }
 
     @Override
@@ -35,17 +29,23 @@ public class CircuitoFacade implements ICircuitos {
     }
 
     @Override
-    public boolean existeCircuitos() {
-        return circuitos.isEmpty();
+    public boolean existeCircuito(String nome) {
+        return circuitos.containsKey(nome);
     }
 
     @Override
-    public Map<String,Circuito> getCircuitos() {
-        return null;
+    public boolean existeCircuitos() {
+        return !circuitos.isEmpty();
     }
 
     @Override
     public int calcularNRetas(int nChicanes, int nCurvas) {
         return nChicanes+nCurvas;
     }
+
+    @Override
+    public ArrayList<Circuito> getCircuitos() {
+        return null;
+    }
+
 }

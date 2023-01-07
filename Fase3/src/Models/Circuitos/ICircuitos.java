@@ -9,13 +9,15 @@ public interface ICircuitos {
     
     public void adicionarCircuito(Circuito circuito);
 
-    public void adicionarCircuito(double distancia, int nVoltas, int nChicanes, int nCurvas, int nRetas, ArrayList<GDU> retasGDU, ArrayList<GDU> curvasGDU);
-    
     public void removerCircuito(String nome);
+
+    public boolean existeCircuito(String nome);
 
     public boolean existeCircuitos();
 
+    public int calcularNRetas(int nChicanes, int nCurvas);
+
     ArrayList<Circuito> getCircuitos();
 
-    public int calcularNRetas(int nChicanes, int nCurvas);
+    public Circuito getCircuito(String nome);
 }
