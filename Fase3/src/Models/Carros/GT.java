@@ -23,8 +23,8 @@ public class GT extends Carro {
      * @param cilindrada
      * @param potencia
      */
-    public GT(String marca, String modelo, int cilindrada, int potencia, int hibrido, int potenciaHibrido) {
-        super(marca, modelo, cilindrada, (potencia + (hibrido*potenciaHibrido)), (0.80 + (cilindrada*0.001)));
+    public GT(String marca, String modelo, int cilindrada, int potencia, int hibrido, int potenciaHibrido, double pac) {
+        super(marca, modelo, cilindrada, (potencia + (hibrido*potenciaHibrido)), (0.80 + (cilindrada*0.001)), pac);
         this.hibrido = hibrido;
         this.potenciaHibrido = potenciaHibrido;
     }
@@ -38,7 +38,15 @@ public class GT extends Carro {
         this.hibrido = gt.hibrido;
         this.potenciaHibrido = gt.potenciaHibrido;
     }
-    
+
+    public int getPotenciaHibrido() {
+        return potenciaHibrido;
+    }
+
+    public int getHibrido() {
+        return hibrido;
+    }
+
     public Carro clone() {
         return new GT(this);
     }

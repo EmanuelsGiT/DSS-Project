@@ -10,6 +10,7 @@ public abstract class Carro {
     private int cilindrada; // cilindrada do carro
     private int potencia; // potencia do carro
     private double fiabilidade; // fiabilidade do carro
+    private double pac;
 
     /**
      * Construtor vazio/não parameterizado
@@ -20,6 +21,7 @@ public abstract class Carro {
         this.cilindrada = 0;
         this.potencia = 0;
         this.fiabilidade = 0;
+        this.pac = 0;
     }
 
     /**
@@ -30,12 +32,13 @@ public abstract class Carro {
      * @param potencia
      * @param fiabilidade
      */
-    public Carro(String marca, String modelo, int cilindrada, int potencia, double fiabilidade) {
+    public Carro(String marca, String modelo, int cilindrada, int potencia, double fiabilidade, double pac) {
         this.marca = marca;
         this.modelo = modelo;
         this.cilindrada = cilindrada;
         this.potencia = potencia;
         this.fiabilidade = fiabilidade;
+        this.pac = pac;
     }
 
     /**
@@ -48,6 +51,7 @@ public abstract class Carro {
         this.cilindrada = carro.cilindrada;
         this.potencia = carro.potencia;
         this.fiabilidade = carro.fiabilidade;
+        this.pac= carro.pac;
     }
 
     public String getMarca() {
@@ -69,6 +73,7 @@ public abstract class Carro {
     public double getFiabilidade() {
         return this.fiabilidade;
     }
+
 
     public void setMarca(String marca) {
         this.marca = marca;
@@ -105,5 +110,9 @@ public abstract class Carro {
         sb.append("\nPotencia: ");sb.append(this.potencia);
         sb.append("\nFiabiliade: ");sb.append(this.fiabilidade);
         return sb.toString();
+    }
+
+    public double getPAC() {
+        return this.pac;
     }
 }

@@ -16,8 +16,8 @@ public class Main {
         UtilizadorDAO uDAO = UtilizadorDAO.getInstance();
         CircuitoDAO cDAO = CircuitoDAO.getInstance();
 
-        uDAO.clear();
-        cDAO.clear();
+        //uDAO.clear();
+        //cDAO.clear();
 
         Controller controller = new Controller();
         controller.run();

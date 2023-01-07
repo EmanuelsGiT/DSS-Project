@@ -3,7 +3,7 @@ package src.Models.Campeonatos;
 import java.util.HashMap;
 import java.util.Map;
 
-import DAOs.CampeonatoDAO;
+import src.DAOs.CampeonatoDAO;
 import src.Models.Campeonatos.CarroSetup;
 import src.Models.Campeonatos.CarroSetup.ModoMotor;
 import src.Models.Campeonatos.CarroSetup.Pneus;
@@ -20,11 +20,11 @@ public class CampeonatoFacade implements ICampeonatos {
      private Map<String,Campeonato> campeonatos;
 
      public CampeonatoFacade() {
-          this.campeonatos = new HashMap<>();
+          this.campeonatos = CampeonatoDAO.getInstance();
      }
 
      private Campeonato getCampeonato(String nomeCampeonato) {
-          Campeonato c = CampeonatoDAO.getInstance().get(nomeCampeonato);
+          Campeonato c = this.campeonatos.get(nomeCampeonato);
           if (c == null);
                //exception
           
@@ -34,14 +34,15 @@ public class CampeonatoFacade implements ICampeonatos {
 
      @Override
      public void adicionarCampeonato(Campeonato campeonato) {
-          CampeonatoDAO.getInstance().put(campeonato);
+          this.campeonatos.put(campeonato.getNome(), campeonato);
      }
-
+    /**
      @Override
      // campeonatoNaoExistenteException
      public void removerCampeonato(String nomeCampeonato) {
           CampeonatoDAO.getInstance().remove(nomeCampeonato);
      }
+
 
      @Override
      public void registaJogador(String nomeJogador, String nomeCampeonato, Piloto piloto, Carro carro) {
@@ -80,4 +81,5 @@ public class CampeonatoFacade implements ICampeonatos {
           return c.getResultadosCorrida(corrida);
 
      }
+     **/
 }

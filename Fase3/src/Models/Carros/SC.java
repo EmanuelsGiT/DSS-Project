@@ -18,11 +18,10 @@ public class SC extends Carro {
      * FIABILIDADE POR CALCULAR
      * @param marca
      * @param modelo
-     * @param cilindrada
      * @param potencia
      */
-    public SC(String marca, String modelo, int potencia) {
-        super(marca, modelo, 2500, potencia, (0.80 + (2500*0.001)));
+    public SC(String marca, String modelo, int potencia, double pac) {
+        super(marca, modelo, 2500, potencia, (0.80 + (2500*0.001)), pac);
     }
     
     /**

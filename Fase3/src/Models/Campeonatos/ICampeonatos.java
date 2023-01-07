@@ -10,7 +10,8 @@ import src.Models.Pilotos.Piloto;
 public interface ICampeonatos {
     
     public void adicionarCampeonato(Campeonato campeonato); // done
-    
+
+    /**
     // Não deveria receber uma String com o nome do campeonato
     public void removerCampeonato(String nomeCampeonato); //done
 
@@ -26,4 +27,5 @@ public interface ICampeonatos {
     public void prepararCorrida(String nomeCampeonato, int corrida, String nomeJogador); // ???????
 
     public Map<Registo,Integer> getResultadosCorrida(String nomeCampeonato, int corrida); // done
-}
+**/
+     }

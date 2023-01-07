@@ -10,6 +10,8 @@ import java.lang.reflect.Type;
 
 public class Menu {
 
+
+
     public interface Handler {
         void execute() throws Exception;
     }
@@ -268,5 +270,24 @@ public class Menu {
             return Menu.lerInt(texto);
         }
         return r;
+    }
+
+    public static int lerInt(String s, int min, int max) {
+        int x = lerInt(s);
+        return x >= min && x <= max ? x : lerInt(s, min, max);
+    }
+    public static double lerDouble(String s, double min, double max) {
+        double x = lerDouble(s);
+        return x >= min && x <= max ? x : lerDouble(s, min, max);
+    }
+    public static boolean confirmOption(String s) throws IOException {
+        System.out.println(s);
+        String r = is.readLine();
+        if (r.equalsIgnoreCase("y"))
+            return true;
+        else if (r.equalsIgnoreCase("n"))
+            return false;
+        else
+            return confirmOption(s);
     }
 }

@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import DAOs.RegistadoDAO;
-import DAOs.RegistoDAO;
 import src.Models.Campeonatos.CarroSetup.ModoMotor;
 import src.Models.Campeonatos.CarroSetup.Pneus;
 import src.Models.Carros.Carro;
@@ -47,24 +45,18 @@ public class Campeonato {
     public Campeonato(Campeonato campeonato) {
         this.nome = campeonato.nome;
         this.corridas = campeonato.getCorridas();
-        this.registos = campeonato.getRegistos();
+       // this.registos = campeonato.getRegistos();
     }
 
     public String getNome() {
         return this.nome;
     }
 
+
     public ArrayList<Corrida> getCorridas() {
-        if (corridas==null) {
-            corridas = CorridaDAO.getInstance(nome)
-                                 .values()
-                                 .stream()
-                                 .map(Corrida::clone)
-                                 .collect(Collectors.toList());
-        }
         return (ArrayList<Corrida>) corridas.stream().map(Corrida::clone).collect(Collectors.toList());
     }
-
+    /**
         
     public HashMap<String, Registo> getRegistos() {
         if(registos == null) {
@@ -162,6 +154,7 @@ public class Campeonato {
         Corrida c = getCorridas().get(corrida);
     }
 
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -171,7 +164,7 @@ public class Campeonato {
         sb.append("\nRegistos: ");sb.append(this.getRegistos());
         return sb.toString();
     }
-
+     **/
 
 
 

@@ -29,7 +29,7 @@ public class Corrida {
 
     public Corrida(Circuito circuito) {
         this.circuito = circuito.clone();
-        this.clima = null;
+        this.clima = Clima.SECO;
         this.resultados = new HashMap<>();
     }
 

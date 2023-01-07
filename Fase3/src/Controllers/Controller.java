@@ -2,6 +2,16 @@ package src.Controllers;
 
 import UI.Menu;
 
+import src.DAOs.CampeonatoDAO;
+import src.Main;
+import src.Models.Campeonatos.Campeonato;
+import src.Models.Campeonatos.CampeonatoFacade;
+import src.Models.Campeonatos.Corrida;
+import src.Models.Campeonatos.ICampeonatos;
+import src.Models.Carros.C1;
+import src.Models.Carros.Carro;
+import src.Models.Carros.CarroFacade;
+import src.Models.Carros.ICarros;
 import src.Models.Circuitos.Circuito;
 import src.Models.Circuitos.CircuitoFacade;
 import src.Models.Circuitos.ICircuitos;
@@ -9,6 +19,7 @@ import src.Models.Utilizadores.*;
 import src.Views.CircuitoView;
 import src.Views.UtilizadorView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Arrays;
@@ -20,7 +31,8 @@ public class Controller {
     // Model
     private final IUtilizadores modelUtilizador;
     private final ICircuitos modelCircuto;
-    //private final ICampeonatos modelCampeonato;
+    private final ICampeonatos modelCampeonato;
+    private final ICarros modelCarro;
     // View
     private final UtilizadorView viewUtilizador;
     private final CircuitoView viewCircuito;
@@ -30,7 +42,8 @@ public class Controller {
     public Controller() {
         this.modelUtilizador = new UtilizadorFacade();
         this.modelCircuto = new CircuitoFacade();
-        //this.modelCampeonato = new CampeonatoFacade();
+        this.modelCampeonato = new CampeonatoFacade();
+        this.modelCarro = new CarroFacade();
 
         this.viewUtilizador = new UtilizadorView();
         this.viewCircuito = new CircuitoView();
@@ -100,7 +113,7 @@ public class Controller {
     }
 
     public void menuPrincipalAdmin() throws Exception {
-        Menu menuInicial = new Menu("Menu Principal", new String[] {"Adicionar Campeonato", "Adicionar Circuito", "Adicionar Carro", "opcoes","velhinhos"});
+        Menu menuInicial = new Menu("Menu Principal", new String[] {"Adicionar Campeonato", "Adicionar Circuito", "Adicionar Carro", "Adicionar Piloto"});
         menuInicial.setHandler(1, this::adicionarCampeonato);
         menuInicial.setPreCondition(1, this.modelCircuto::existeCircuitos);
         menuInicial.setHandler(2, this::adicionarCircuito);
@@ -109,12 +122,38 @@ public class Controller {
         menuInicial.run();
     }
 
-    public void menuPrincipalJogador() {
+    public void menuPrincipalJogador() throws Exception {
+        Menu menuInicial = new Menu("Menu Principal", new String[] {"Preparar Corrida", "Registar Campeonato", "Consultar Classificacao Campeonato", "Consultar Classificacao Corrida"});
 
+        menuInicial.run();
 
     }
 
-    private void adicionarCarro() {
+    private void adicionarCarro() throws Exception {
+        Menu menuAdicionarCarro = new Menu("Menu Adicionar Carro", new String[]{"Carro C1.", "Carro C2.", "Carro GT.", "Carro SC"});
+        menuAdicionarCarro.setHandler(1, () -> {
+
+        });
+
+        menuAdicionarCarro.run();
+    }
+
+    private void criarCarroAux(boolean possivelHibrido) throws IOException {
+        String marca = Menu.lerLinha("Marca do carro: ");
+        String modelo = Menu.lerLinha("Modelo do carro: ");
+        int potencia = Menu.lerInt("Potencia do carro: ");
+        double pac = Menu.lerDouble("Insira o PAC: ", 0.0, 1.0);
+        boolean eHibrido = Menu.confirmOption("E hibrido?[y/n]");
+        int potenciaHibrido = 0;
+        if (eHibrido) {
+            potenciaHibrido = Menu.lerInt("Potencia do Hibrido: ");
+        }
+        int hibridoValue = eHibrido ? 1 : 0;
+
+        Carro carro = new C1(marca, modelo, potencia, hibridoValue, potenciaHibrido, pac);
+        this.modelCarro.adicionarCarro(carro);
+        System.out.println("Carro adicionado com sucesso!");
+
     }
 
     private void adicionarCircuito() {
@@ -163,6 +202,9 @@ public class Controller {
     }
 
     private void adicionarCampeonato() {
+        CampeonatoDAO x = CampeonatoDAO.getInstance();
+        x.clear();
+
         String nome = Menu.lerLinha("Nome do campeonato: ");
         ArrayList<Circuito> circuitos = this.modelCircuto.getCircuitos();
         ArrayList<Circuito> circuitosEscolhidos = new ArrayList<>();
@@ -176,8 +218,8 @@ public class Controller {
             }
         } while (op != 0);
 
-        //Campeonato c = new Campeonato(nome, circuitosEscolhidos.stream().map(Corrida::new).collect(Collectors.toCollection(ArrayList::new)));
-        //this.modelCampeonato.adicionarCampeonato(c);
+        Campeonato c = new Campeonato(nome, circuitosEscolhidos.stream().map(Corrida::new).collect(Collectors.toCollection(ArrayList::new)));
+        this.modelCampeonato.adicionarCampeonato(c);
     }
 
 }

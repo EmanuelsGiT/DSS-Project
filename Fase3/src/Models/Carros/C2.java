@@ -24,8 +24,8 @@ public class C2 extends Carro {
      * @param cilindrada
      * @param potencia
      */
-    public C2(String marca, String modelo, int cilindrada, int potencia, int hibrido, int potenciaHibrido) {
-        super(marca, modelo, cilindrada, (potencia + (hibrido*potenciaHibrido)), (0.80 + (cilindrada*0.001)));
+    public C2(String marca, String modelo, int cilindrada, int potencia, int hibrido, int potenciaHibrido, double pac) {
+        super(marca, modelo, cilindrada, (potencia + (hibrido*potenciaHibrido)), (0.80 + (cilindrada*0.001)), pac);
         this.hibrido = hibrido;
         this.potenciaHibrido = potenciaHibrido;
     }
@@ -39,7 +39,15 @@ public class C2 extends Carro {
         this.hibrido = c2.hibrido;
         this.potenciaHibrido = c2.potenciaHibrido;
     }
-    
+
+    public int getPotenciaHibrido() {
+        return potenciaHibrido;
+    }
+
+    public int getHibrido() {
+        return hibrido;
+    }
+
     public Carro clone() {
         return new C2(this);
     }
