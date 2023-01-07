@@ -21,7 +21,7 @@ public class SC extends Carro {
      * @param potencia
      */
     public SC(String marca, String modelo, int potencia, double pac) {
-        super(marca, modelo, 2500, potencia, (0.80 + (2500*0.001)), pac);
+        super(marca, modelo, 2500, potencia, 0.8, pac);
     }
     
     /**

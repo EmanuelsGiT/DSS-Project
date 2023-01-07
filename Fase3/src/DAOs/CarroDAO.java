@@ -66,7 +66,7 @@ public class CarroDAO implements Map<String, Carro> {
 
     @Override
     public Carro put(String key, Carro value) {
-        String sql = "INSERT INTO carros (Marca,Modelo,Classe,Cilindrada,Potencia,Fiabilidade,Pac,PotenciaEletrica) VALUES (?,?,?,?,?,?,?);";
+        String sql = "INSERT INTO carros (Marca,Modelo,Classe,Cilindrada,Potencia,Fiabilidade,Pac,PotenciaEletrica) VALUES (?,?,?,?,?,?,?,?);";
         try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);){
 
@@ -119,7 +119,12 @@ public class CarroDAO implements Map<String, Carro> {
 
     @Override
     public void clear() {
-
+        try ( Connection conn = DataBaseData.getConnection();
+              Statement stm = conn.createStatement();){
+            stm.executeUpdate("DELETE FROM carros;");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

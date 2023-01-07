@@ -8,10 +8,7 @@ import src.Models.Campeonatos.Campeonato;
 import src.Models.Campeonatos.CampeonatoFacade;
 import src.Models.Campeonatos.Corrida;
 import src.Models.Campeonatos.ICampeonatos;
-import src.Models.Carros.C1;
-import src.Models.Carros.Carro;
-import src.Models.Carros.CarroFacade;
-import src.Models.Carros.ICarros;
+import src.Models.Carros.*;
 import src.Models.Circuitos.Circuito;
 import src.Models.Circuitos.CircuitoFacade;
 import src.Models.Circuitos.ICircuitos;
@@ -131,29 +128,56 @@ public class Controller {
 
     private void adicionarCarro() throws Exception {
         Menu menuAdicionarCarro = new Menu("Menu Adicionar Carro", new String[]{"Carro C1.", "Carro C2.", "Carro GT.", "Carro SC"});
-        menuAdicionarCarro.setHandler(1, () -> {
-
-        });
+        menuAdicionarCarro.setHandler(1, () -> adicionarCarroAux(true, C1.class.getName(), false));
+        menuAdicionarCarro.setHandler(2, () -> adicionarCarroAux(true, C2.class.getName(), true));
+        menuAdicionarCarro.setHandler(3, () -> adicionarCarroAux(true, GT.class.getName(), true));
+        menuAdicionarCarro.setHandler(4, () -> adicionarCarroAux(false, SC.class.getName(), false));
 
         menuAdicionarCarro.run();
     }
 
-    private void criarCarroAux(boolean possivelHibrido) throws IOException {
+    private void adicionarCarroAux(boolean possivelHibrido, String classeCarro, boolean possivelCilindarada) throws IOException {
+        Carro carro = null;
         String marca = Menu.lerLinha("Marca do carro: ");
         String modelo = Menu.lerLinha("Modelo do carro: ");
         int potencia = Menu.lerInt("Potencia do carro: ");
-        double pac = Menu.lerDouble("Insira o PAC: ", 0.0, 1.0);
-        boolean eHibrido = Menu.confirmOption("E hibrido?[y/n]");
-        int potenciaHibrido = 0;
-        if (eHibrido) {
-            potenciaHibrido = Menu.lerInt("Potencia do Hibrido: ");
+
+        int cilindrada = 0;
+        if (possivelCilindarada) {
+            if (classeCarro.equals(C2.class.getName()))
+                cilindrada = Menu.lerInt("Cilindrada do carro: ", 3000, 5000);
+            else if (classeCarro.equals(GT.class.getName()))
+                cilindrada = Menu.lerInt("Cilindrada do carro: ", 2000, 4000);
         }
-        int hibridoValue = eHibrido ? 1 : 0;
 
-        Carro carro = new C1(marca, modelo, potencia, hibridoValue, potenciaHibrido, pac);
-        this.modelCarro.adicionarCarro(carro);
-        System.out.println("Carro adicionado com sucesso!");
+        double pac = Menu.lerDouble("Insira o PAC: ", 0.0, 1.0);
+        if (possivelHibrido) {
+            boolean eHibrido = Menu.confirmOption("E hibrido?[y/n]");
+            int potenciaHibrido = 0;
+            if (eHibrido) {
+                potenciaHibrido = Menu.lerInt("Potencia do Hibrido: ");
+            }
+            int hibridoValue = eHibrido ? 1 : 0;
 
+            if (classeCarro.equals(C1.class.getName())) {
+                carro = new C1(marca, modelo, potencia, hibridoValue, potenciaHibrido, pac);
+            } else if (classeCarro.equals(C2.class.getName())) {
+                carro = new C2(marca, modelo, cilindrada, potencia, hibridoValue, potenciaHibrido, pac);
+            } else if (classeCarro.equals(GT.class.getName())) {
+                carro = new GT(marca, modelo, cilindrada, potencia, hibridoValue, potenciaHibrido, pac);
+            }
+        }
+        else {
+            if (classeCarro.equals(SC.class.getName())) {
+                carro = new SC(marca, modelo, potencia, pac);
+            }
+        }
+        if (carro != null) {
+            this.modelCarro.adicionarCarro(carro);
+            System.out.println("Carro adicionado com sucesso!");
+        } else {
+            System.out.println("ERRO");
+        }
     }
 
     private void adicionarCircuito() {

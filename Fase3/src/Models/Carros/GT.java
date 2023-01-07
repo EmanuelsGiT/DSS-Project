@@ -24,7 +24,7 @@ public class GT extends Carro {
      * @param potencia
      */
     public GT(String marca, String modelo, int cilindrada, int potencia, int hibrido, int potenciaHibrido, double pac) {
-        super(marca, modelo, cilindrada, (potencia + (hibrido*potenciaHibrido)), (0.80 + (cilindrada*0.001)), pac);
+        super(marca, modelo, cilindrada, (potencia + (hibrido*potenciaHibrido)), 0.8, pac);
         this.hibrido = hibrido;
         this.potenciaHibrido = potenciaHibrido;
     }

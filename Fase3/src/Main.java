@@ -1,5 +1,6 @@
 package src;
 
+import src.DAOs.CarroDAO;
 import src.DAOs.CircuitoDAO;
 import src.DAOs.DataBaseData;
 import src.Controllers.Controller;
@@ -15,9 +16,11 @@ public class Main {
 
         UtilizadorDAO uDAO = UtilizadorDAO.getInstance();
         CircuitoDAO cDAO = CircuitoDAO.getInstance();
+        CarroDAO carroDAO = CarroDAO.getInstance();
 
         //uDAO.clear();
         //cDAO.clear();
+        carroDAO.clear();
 
         Controller controller = new Controller();
         controller.run();
