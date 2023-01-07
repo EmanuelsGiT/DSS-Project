@@ -15,7 +15,7 @@ public class CircuitoFacade implements ICircuitos {
 
     private Circuito getCircuito(String nomeCircuito){
         Circuito c = circuitos.get(nomeCircuito);
-        if (c=null);
+        if (c==null);
         return c;
     }
 
