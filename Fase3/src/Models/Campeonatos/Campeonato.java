@@ -7,6 +7,8 @@ import src.Models.Utilizadores.Registado;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import DAOs.RegistadoDAO;
+import DAOs.RegistoDAO;
 import src.Models.Pilotos.Piloto;
 
 
@@ -67,6 +69,21 @@ public class Campeonato {
         this.registos = new HashMap<>(registos);
     }
 
+    //vou fazer ja para cobrir os DAOS 
+    // Exceptions --> 
+    public void regista(String nomeJogador, Piloto piloto, Carro carro) {
+        Jogador jog = RegistadoDAO.getInstance().get(nomeJogador);
+        if (jog == null) {
+            //exception jogador n existe
+        }
+        if (RegistoDAO.getInstance(this.nome).get(nomeJogador) != null) { 
+            // exception jogador ja esta registado
+        }
+        RegistoDAO.getInstance(this.nome).put(jog,new Registo(0, piloto, jog, new CarroSetup(carro)));
+            
+    }
+    
+    
     public boolean validaAfinacao(String nomeJogador) {
         Registo r = this.registos.get(nomeJogador);
         int numAfinacoes = r.getNumAfinacoes();
