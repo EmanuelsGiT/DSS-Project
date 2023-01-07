@@ -44,7 +44,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                     ");";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTCorrida();
+            e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
     }
@@ -65,7 +65,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
             if (rs.next())
                 i = rs.getInt(1);
         } catch (Exception e) {
-            e.printStackTCorrida();
+            e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return i;
@@ -89,7 +89,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                     r=true;
             }
         } catch (SQLException e) {
-            e.printStackTCorrida();
+            e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return r;
@@ -106,7 +106,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                 }
             }
             } catch (SQLException e) {
-                e.printStackTCorrida();
+                e.printStackTrace();
                 throw new NullPointerException(e.getMessage());
             }
         return res;
@@ -122,7 +122,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTCorrida();
+            e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return res;
@@ -150,7 +150,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTCorrida();
+            e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return null;
@@ -160,7 +160,7 @@ public class CorridaDAO implements Map<Integer, Corrida> {
     public boolean containsValue(Object value) {
         if (!(value instanceof Corrida)) return false;
         Corrida p = (Corrida) value;
-        return p.equals(get(p.getId()));
+        return p.equals(get(p.getNome()));
     }
 
     @Override

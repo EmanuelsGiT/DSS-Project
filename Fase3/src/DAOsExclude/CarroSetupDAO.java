@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CarroSetupDAO implements Map<Integer, Carro> {
+public class CarroSetupDAO implements Map<String, Carro> {
     private static CarroSetupDAO singleton = null;
 
     private CarroSetupDAO() {
@@ -24,7 +24,6 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
                     "Classe CHAR(2) NOT NULL);";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -47,7 +46,6 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
                 i = rs.getInt(1);
             }
         } catch (Exception e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -86,7 +84,7 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
 
     @Override
     public Carro get(Object key) {
-        Carro r = null;
+        Carro r = null;/*
         try (Connection conn = DataBaseData.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT Marca,Modelo,Cilindrada,Potencia,Fiabilidade FROM carros WHERE Modelo= ?;");
         ) {
@@ -125,12 +123,12 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
             throw new NullPointerException(e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
-        }
+        }*/
         return r;
     }
 
     @Override
-    public Carro put(Integer key, Carro car) {
+    public Carro put(String key, Carro car) {
         String sql = "";
         if (key == null) {
             sql = "INSERT INTO cars (Class,Tyre,BodyWork,EngineMode,EngineCapacity,EnginePower) VALUES (?,?,?,?,?,?);";
@@ -142,7 +140,7 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
         ) {
             int n = 1;
             if (key != null) {
-                ps.setInt(n, car.getId());
+                ps.setString(n, car.getModelo());
                 n++;
             }
 
@@ -165,7 +163,7 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys();) {
                 if (rs.next())
-                    car.setId(rs.getInt(1));
+                    car.setModelo(rs.getInt(1));
             }
             return car;
         } catch (SQLException e) {
@@ -212,7 +210,7 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
 
 
     public Carro put(Carro u) {
-        return put(u.getId(), u);
+        return put(u.getModelo(), u);
     }
 
     @Override
@@ -232,7 +230,7 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
     }
 
     @Override
-    public void putAll(Map<? extends Integer, ? extends Carro> m) {
+    public void putAll(Map<? extends String, ? extends Carro> m) {
         return;
     }
 
@@ -248,14 +246,14 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
     }
 
     @Override
-    public Set<Integer> keySet() {
-        Set<Integer> r = new HashSet<>();
+    public Set<String> keySet() {
+        Set<String> r = new HashSet<>();
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT Id FROM cars;");
+             ResultSet rs = stm.executeQuery("SELECT Modelo FROM cars;");
         ) {
             while (rs.next())
-                r.add(rs.getInt(1));
+                r.add(rs.getString(1));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -293,9 +291,9 @@ public class CarroSetupDAO implements Map<Integer, Carro> {
     }
 
     @Override
-    public Set<Entry<Integer, Carro>> entrySet() {
+    public Set<Entry<String, Carro>> entrySet() {
         return values().stream()
-                       .collect(Collectors.toMap(Carro::getId, x -> x))
+                       .collect(Collectors.toMap(Carro::getModelo, x -> x))
                        .entrySet();
     }
 

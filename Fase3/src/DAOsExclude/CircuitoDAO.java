@@ -2,6 +2,7 @@ package src.DAOsExclude;
 
 import src.Models.Circuitos.Circuito;
 
+import java.sql.*;
 import java.util.*;
 
 public class CircuitoDAO implements Map<String , Circuito> {
@@ -12,12 +13,12 @@ public class CircuitoDAO implements Map<String , Circuito> {
 
         if (CircuitoDAO.singleton == null) CircuitoDAO.singleton = new CircuitoDAO();
         return CircuitoDAO.singleton;
-
+        
     }
 
     /*private Map<String,Circuito> Circuito=Map.of(
             "Monza",new Circuito("Monza",5.793F,53, new ArrayList<Circuitoection>(Arrays.asList(
-                    new Circuitoection(Circuitoection.CircuitoectionType.STRAIGHT, 0.75F),
+                    new CircuitSection(Circuitoection.CircuitoectionType.STRAIGHT, 0.75F),
                     new Circuitoection(Circuitoection.CircuitoectionType.CHICANE, 0.15F),
                     new Circuitoection(Circuitoection.CircuitoectionType.CURVE, 0.2F),
                     new Circuitoection(Circuitoection.CircuitoectionType.STRAIGHT, 0.5F),

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CampeonatoDAO implements Map<Integer, Campeonato> {
+public class CampeonatoDAO implements Map<String, Campeonato> {
     private static CampeonatoDAO singleton = null;
     private static AdministradorDAO adb = AdministradorDAO.getInstance();
 
@@ -27,7 +27,6 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
                     ");";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -70,7 +69,6 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
                     r = true;
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -86,17 +84,17 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
 
     @Override
     public Campeonato get(Object key) {
-        if (!(key instanceof Integer)) return null;
+        if (!(key instanceof String)) return null;
         try (Connection conn = DataBaseData.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT Nome,Administrador FROM campeonatos WHERE Nome= ?;");
+             PreparedStatement ps = conn.prepareStatement("SELECT Nome FROM campeonatos WHERE Nome= ?;");
         ) {
             ps.setInt(1,(Integer)key);
             try (ResultSet rs = ps.executeQuery();){
                 if (rs.next())
-                    return new Campeonato(
+                    return new Campeonato(new Campeonato(
                             rs.getString("Nome"),
-                            adb.get(rs.getString("Administrador"))
-                    );
+                            rs.getString("Corridas"),
+                            rs.getString("Registos")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -105,7 +103,7 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
     }
 
     @Override
-    public Campeonato put(Integer key, Campeonato value) {
+    public Campeonato put(String key, Campeonato value) {
         String sql = "";
         if (key == null) {
             sql = "INSERT INTO campeonatos (Administrador) VALUES (?);";
@@ -120,7 +118,7 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
                 ps.setString(n, value.getNome());
                 n++;
             }
-            ps.setString(n, value.getAdministrador().getUsername());
+            ps.setString(n, value.getNome());
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys();) {
                 if (rs.next())
@@ -155,13 +153,12 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
 
 
     @Override
-    public void putAll(Map<? extends Integer, ? extends Campeonato> m) {
-
+    public void putAll(Map<? extends String, ? extends Campeonato> m) {
         try (Connection conn = DataBaseData.getConnection();) {
             conn.setAutoCommit(false);
             String sql="";
             for (Entry e : m.entrySet()) {
-                if (e.getKey()!=null) sql="INSERT INTO campeonatos (Nome,Administrador) VALUES (?,?);";
+                if (e.getKey()!=null) sql="INSERT INTO campeonatos (Nome,Corridas,Registos) VALUES (?,?,?);";
                 else sql="INSERT INTO campeonatos (Administrador) VALUES (?);";
             try (PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
                 int n = 1;
@@ -169,7 +166,7 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
                     ps.setInt(n, (Integer) e.getKey());
                     n++;
                 }
-                ps.setString(n, ((Campeonato)e.getValue()).getAdministrador().getUsername());
+                ps.setString(n, ((Campeonato)e.getValue()).getNome());
                 ps.executeUpdate();
                 try (ResultSet rs = ps.getGeneratedKeys();) {
                     if (rs.next())
@@ -197,14 +194,14 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
     }
 
     @Override
-    public Set<Integer> keySet() {
-        Set<Integer> r = new HashSet<>();
+    public Set<String> keySet() {
+        Set<String> r = new HashSet<>();
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT Nome FROM campeonatos;");
         ) {
             while (rs.next())
-                r.add(rs.getInt(1));
+                r.add(rs.getString(1));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -217,11 +214,13 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
         Collection<Campeonato> r = new HashSet<Campeonato>();
         try (Connection conn = DataBaseData.getConnection();
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT Nome,Administrador FROM campeonatos;");
+             ResultSet rs = stm.executeQuery("SELECT Nome,Corridas,Registos FROM campeonatos;");
         ) {
             while (rs.next())
-                r.add(new Campeonato(rs.getInt("Nome"),
-                        adb.get(rs.getString("Administrador"))));
+                r.add(new Campeonato(
+                    rs.getString("Nome"),
+                    rs.getString("Corridas"),
+                    rs.getString("Registos")));
     } catch (SQLException e) {
         throw new RuntimeException(e);
     }
@@ -229,7 +228,7 @@ public class CampeonatoDAO implements Map<Integer, Campeonato> {
     }
 
     @Override
-    public Set<Entry<Integer, Campeonato>> entrySet() {
+    public Set<Entry<String, Campeonato>> entrySet() {
         return values().stream().collect(
                 Collectors.toMap(Campeonato::getNome, x -> x)).entrySet();
     }

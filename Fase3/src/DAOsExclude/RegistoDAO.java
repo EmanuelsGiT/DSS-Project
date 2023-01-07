@@ -100,7 +100,7 @@ public class RegistoDAO implements Map<String, Registo> {
     public boolean containsValue(Object value) {
         if (!(value instanceof Registo)) return false;
         Registo p = (Registo) value;
-        return p.equals(get(p.getManager().getNome()));
+        return p.equals(get(p.getNome()));
     }
 
     @Override
@@ -227,6 +227,6 @@ public class RegistoDAO implements Map<String, Registo> {
     @Override
     public Set<Entry<String, Registo>> entrySet() {
         return values().stream().collect(
-                Collectors.toMap(x->x.getManager().getNome(), x -> x)).entrySet();
+                Collectors.toMap(x->x.getNome(), x -> x)).entrySet();
     }
 }
