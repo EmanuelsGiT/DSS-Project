@@ -1,7 +1,8 @@
-package DAOs;
+package src.DAOsExclude;
 
+import src.DAOs.AdministradorDAO;
+import src.DAOs.DataBaseData;
 import src.Models.Campeonatos.Campeonato;
-import src.Models.Utilizadores.Administrador;
 
 import java.sql.*;
 import java.util.Collection;

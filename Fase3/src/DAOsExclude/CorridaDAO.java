@@ -1,5 +1,7 @@
-package DAOs;
+package src.DAOsExclude;
 
+import src.DAOs.AdministradorDAO;
+import src.DAOs.DataBaseData;
 import src.Models.Campeonatos.Corrida;
 import src.Models.Campeonatos.Registo;
 

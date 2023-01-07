@@ -1,5 +1,6 @@
-package DAOs;
+package src.DAOsExclude;
 
+import src.DAOs.DataBaseData;
 import src.Models.Pilotos.Piloto;
 
 import java.sql.*;
@@ -14,7 +15,7 @@ public class PilotoDAO implements Map<String, Piloto> {
     private PilotoDAO() {
 
         try (Connection conn = DataBaseData.getConnection();
-            Statement stm = conn.createStatement()) {
+             Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS pilotos(" +
                                  "NomePiloto VARCHAR(50) NOT NULL PRIMARY KEY," +
                                  "PilotoCTS DECIMAL(1,3) NOT NULL," +

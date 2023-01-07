@@ -1,6 +1,6 @@
 package DB;
 
-import DAOs.DataBaseData;
+import src.DAOs.DataBaseData;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -8,8 +8,7 @@ import java.sql.SQLException;
 
 public class CreateDataBase 
 {
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) throws ClassNotFoundException {
         try(Connection conn = DataBaseData.getConnectionNoDatabase();
             Statement stmt = conn.createStatement();) 
         {

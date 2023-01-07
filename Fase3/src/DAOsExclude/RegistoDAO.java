@@ -1,5 +1,7 @@
-package DAOs;
+package src.DAOsExclude;
 
+import src.DAOs.DataBaseData;
+import src.DAOs.RegistadoDAO;
 import src.Models.Campeonatos.Registo;
 
 import java.sql.*;

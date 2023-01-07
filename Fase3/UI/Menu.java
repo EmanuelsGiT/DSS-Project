@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 public class Menu {
 
     public interface Handler {
-        void execute();
+        void execute() throws Exception;
     }
 
     public interface PreCondition {
@@ -130,7 +130,7 @@ public class Menu {
     /**
      * Correr o menu uma vez.
      */
-    public void runOnce() {
+    public void runOnce() throws Exception {
         int op;
         show();
         op = Menu.readOption(this.opcoes.size());
@@ -148,7 +148,7 @@ public class Menu {
      *
      * Termina com a opção 0 (zero).
      */
-    public void run() {
+    public void run() throws Exception {
         int op;
         do {
             show();
