@@ -28,10 +28,7 @@ public class CircuitoView {
     public void pedirGDU(String s, int numero) {
         System.out.println("GDU da " + s + " número " + numero+1 + ": ");
     }
-    
-    public void pedirGDU(String s, int numero) {
-        System.out.println("GDU da " + s + " número " + numero+1 + ": ");
-    }
+
     
     public void opcaoInvalida() {
         System.out.println("Opção inválida!");

@@ -37,6 +37,8 @@ public class Test {
         modelCircuito.adicionarCircuito(d);
 
         Circuito b = modelCircuito.getCircuito("portimao");
-        System.out.println(b);
+
+        for (Circuito circ : modelCircuito.getCircuitos())
+            System.out.println(circ);
     }
 }

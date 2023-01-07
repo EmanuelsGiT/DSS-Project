@@ -45,7 +45,7 @@ public class CircuitoFacade implements ICircuitos {
 
     @Override
     public ArrayList<Circuito> getCircuitos() {
-        return null;
+        return new ArrayList<>(circuitos.values());
     }
 
 }

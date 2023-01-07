@@ -4,10 +4,7 @@ import src.Models.Circuitos.Circuito;
 import src.Models.Utilizadores.Registado;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CircuitoDAO implements Map<String, Circuito> {
     private static CircuitoDAO singleton = null;
@@ -186,7 +183,20 @@ public class CircuitoDAO implements Map<String, Circuito> {
 
     @Override
     public Collection<Circuito> values() {
-        return null;
+        Collection<Circuito> r = new HashSet<Circuito>();
+        try (
+                Connection conn = DataBaseData.getConnection();
+                Statement stm = conn.createStatement();
+                ResultSet rs = stm.executeQuery("SELECT Nome FROM circuitos;");
+        ){
+            while(rs.next()) {
+                Circuito c = this.get(rs.getString("Nome"));
+                r.add(c);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return r;
     }
 
     @Override
