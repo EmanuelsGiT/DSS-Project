@@ -13,4 +13,11 @@ public class CircuitoView {
             System.out.println(circuitos.get(i));
         }
     }
+
+    public void apresentarGDUS() {
+        System.out.println("[1] - Possivel.");
+        System.out.println("[2] - Dificil.");
+        System.out.println("[3] - Impossivel.");
+
+    }
 }

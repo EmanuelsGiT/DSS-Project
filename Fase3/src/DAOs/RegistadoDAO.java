@@ -1,7 +1,5 @@
 package src.DAOs;
 
-import src.Models.Campeonatos.Registo;
-import src.Models.Utilizadores.Jogador;
 import src.Models.Utilizadores.Registado;
 
 import java.sql.*;
@@ -57,6 +55,20 @@ public class RegistadoDAO implements Map<String, Registado> {
 
     @Override
     public Registado get(Object key) {
+        try (Connection conn = DataBaseData.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT Nome,PalavraPasse FROM registados WHERE Nome= ?;");){
+            ps.setString(1,(String)key);
+            try (ResultSet rs = ps.executeQuery();){
+                if (rs.next())
+                    return new Registado(
+                            rs.getString("Nome"),
+                            rs.getString("PalavraPasse")
+                    );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
         return null;
     }
 

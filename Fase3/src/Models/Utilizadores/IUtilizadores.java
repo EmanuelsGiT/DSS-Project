@@ -6,6 +6,10 @@ public interface IUtilizadores {
 
     public boolean autenticaUtilizador(String nome, String pass);
 
+    public boolean autenticaJogador(String nome, String pass);
+
+    public boolean autenticaAdministrador(String nome, String pass);
+
     public boolean utilizadorExiste(String nome);
 
 }

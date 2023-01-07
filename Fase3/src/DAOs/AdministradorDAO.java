@@ -1,6 +1,7 @@
 package src.DAOs;
 
 import src.Models.Utilizadores.Administrador;
+import src.Models.Utilizadores.Registado;
 
 import java.sql.*;
 import java.util.*;
@@ -58,6 +59,20 @@ public class AdministradorDAO implements Map<String,Administrador> {
 
     @Override
     public Administrador get(Object key) {
+        try (Connection conn = DataBaseData.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT Nome,PalavraPasse FROM administradores WHERE Nome= ?;");){
+            ps.setString(1,(String)key);
+            try (ResultSet rs = ps.executeQuery();){
+                if (rs.next())
+                    return new Administrador(
+                            rs.getString("Nome"),
+                            rs.getString("PalavraPasse")
+                    );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
         return null;
     }
 

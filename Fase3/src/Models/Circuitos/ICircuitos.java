@@ -16,4 +16,6 @@ public interface ICircuitos {
     public boolean existeCircuitos();
 
     ArrayList<Circuito> getCircuitos();
+
+    public int calcularNRetas(int nChicanes, int nCurvas);
 }

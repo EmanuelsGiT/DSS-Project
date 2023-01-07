@@ -28,4 +28,9 @@ public class CircuitoFacade implements ICircuitos {
     public ArrayList<Circuito> getCircuitos() {
         return null;
     }
+
+    @Override
+    public int calcularNRetas(int nChicanes, int nCurvas) {
+        return nChicanes+nCurvas;
+    }
 }

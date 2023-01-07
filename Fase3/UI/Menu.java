@@ -2,6 +2,9 @@ package UI;
 
 import src.Models.Circuitos.Circuito;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.lang.reflect.Type;
 
@@ -17,7 +20,7 @@ public class Menu {
 
     // Varíável de classe para suportar leitura
 
-    private static Scanner is = new Scanner(System.in);
+    private static BufferedReader  is = new BufferedReader(new InputStreamReader(System.in));
 
     // Variáveis de instância
 
@@ -209,10 +212,10 @@ public class Menu {
 
         System.out.print("Opção: ");
         try {
-            String line = is.nextLine();
+            String line = is.readLine();
             op = Integer.parseInt(line);
         }
-        catch (NumberFormatException e) { // Não foi inscrito um int
+        catch (NumberFormatException | IOException e) { // Não foi inscrito um int
             op = -1;
         }
         if (op < 0 || op > nOpcoes) {
@@ -236,6 +239,34 @@ public class Menu {
 
     public static String lerLinha(String texto) {
         System.out.println(texto);
-        return is.nextLine();
+        String l;
+        try {
+            l = is.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return l;
+    }
+
+    public static Double lerDouble(String texto) {
+        double r;
+        try {
+            r = Double.parseDouble(lerLinha(texto));
+        } catch (Exception e) {
+            System.out.println("Numero invalido!");
+            return Menu.lerDouble(texto);
+        }
+        return r;
+    }
+
+    public static int lerInt(String texto) {
+        int r;
+        try {
+            r = Integer.parseInt(lerLinha(texto));
+        } catch (Exception e) {
+            System.out.println("Numero invalido!");
+            return Menu.lerInt(texto);
+        }
+        return r;
     }
 }

@@ -1,11 +1,7 @@
 package src.Controllers;
 
 import UI.Menu;
-import src.DAOs.RegistadoDAO;
-import src.Models.Campeonatos.Campeonato;
-import src.Models.Campeonatos.CampeonatoFacade;
-import src.Models.Campeonatos.Corrida;
-import src.Models.Campeonatos.ICampeonatos;
+
 import src.Models.Circuitos.Circuito;
 import src.Models.Circuitos.CircuitoFacade;
 import src.Models.Circuitos.ICircuitos;
@@ -15,6 +11,7 @@ import src.Views.UtilizadorView;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,7 +20,7 @@ public class Controller {
     // Model
     private final IUtilizadores modelUtilizador;
     private final ICircuitos modelCircuto;
-    private final ICampeonatos modelCampeonato;
+    //private final ICampeonatos modelCampeonato;
     // View
     private final UtilizadorView viewUtilizador;
     private final CircuitoView viewCircuito;
@@ -33,7 +30,7 @@ public class Controller {
     public Controller() {
         this.modelUtilizador = new UtilizadorFacade();
         this.modelCircuto = new CircuitoFacade();
-        this.modelCampeonato = new CampeonatoFacade();
+        //this.modelCampeonato = new CampeonatoFacade();
 
         this.viewUtilizador = new UtilizadorView();
         this.viewCircuito = new CircuitoView();
@@ -69,20 +66,33 @@ public class Controller {
 
     private void SignIn() throws Exception {
 
-        Menu menuTipoLogin = new Menu("Tipo de Login", new String[] {"Anonimo", "Jogador/Administrador"});
+        Menu menuTipoLogin = new Menu("Tipo de Login", new String[] {"Administrador", "Jogador", "Anonimo"});
         menuTipoLogin.setHandler(1, () -> {
+            String[] credenciais = Menu.lerCredenciais();
+            if (this.modelUtilizador.autenticaAdministrador(credenciais[0], credenciais[1])) {
+                System.out.println("Autenticado com Sucesso");
+                this.menuPrincipalAdmin();
+            }
+            else {
+                System.out.println("Erro ao autenticar");
+            }
+        });
+        menuTipoLogin.setHandler(2, () -> {
+            String[] credenciais = Menu.lerCredenciais();
+            if (this.modelUtilizador.autenticaJogador(credenciais[0], credenciais[1])) {
+                System.out.println("Autenticado com Sucesso");
+                this.menuPrincipalJogador();
+            }
+            else {
+                System.out.println("Erro ao autenticar");
+            }
+        });
+
+        menuTipoLogin.setHandler(3, () -> {
             String nome = Menu.lerNome();
             Utilizador u = new Anonimo(nome);
             this.modelUtilizador.registaUtilizador(u);
             this.viewUtilizador.autenticarSucesso(u);
-            this.menuPrincipalAdmin();
-        });
-        menuTipoLogin.setHandler(2, () -> {
-            String[] credenciais = Menu.lerCredenciais();
-            if (this.modelUtilizador.autenticaUtilizador(credenciais[0], credenciais[1])) {
-                System.out.println("Autenticado com Sucesso"); // Ir buscar o jogador!
-
-            }
             this.menuPrincipalJogador();
         });
 
@@ -108,6 +118,42 @@ public class Controller {
     }
 
     private void adicionarCircuito() {
+        String nome = Menu.lerLinha("Nome do circuito: ");
+        Double distancia = Menu.lerDouble("Distancia do circuito: ");
+        int nCurvas = Menu.lerInt("Numero de curvas: ");
+        int nChicanes = Menu.lerInt("Numero de chicanes: ");
+        int nRetas = this.modelCircuto.calcularNRetas(nCurvas, nChicanes);
+
+        String[] t = new String[] {"curva", "reta"};
+        Circuito.GDU[] curvasGDU = new Circuito.GDU[nCurvas];
+        Circuito.GDU[] retasGDU = new Circuito.GDU[nRetas];
+
+        Circuito.GDU[][] tt = new Circuito.GDU[][] {curvasGDU, retasGDU};
+
+        for (int j = 0; j < 2; j++) {
+            for (int i = 0; i < tt[j].length; i++) {
+                System.out.println("GDU da " + t[j] + " numero " + (i+1) + ": ");
+                int op;
+                do {
+                    this.viewCircuito.apresentarGDUS();
+                    op = Menu.readOption(3);
+                    if (op == 1) {
+                        tt[j][i] = Circuito.GDU.POSSIVEL;
+                    } else if (op == 2) {
+                        tt[j][i] = Circuito.GDU.DIFICIL;
+                    } else if (op == 3) {
+                        tt[j][i] = Circuito.GDU.IMPOSSIVEL;
+                    } else {
+                        System.out.println("Opcao invalida!");
+                    }
+                } while (op <= 0 || op > 3);
+            }
+        }
+        int nVoltas = Menu.lerInt("Numero de voltas: ");
+
+        Circuito circuito = new Circuito(nome, distancia, nVoltas, nChicanes, nCurvas, new ArrayList<>(Arrays.asList(tt[1])), new ArrayList<>(Arrays.asList(tt[0])));
+
+        System.out.println("Circuito adicionado com sucesso!");
 
     }
 
@@ -125,7 +171,8 @@ public class Controller {
             }
         } while (op != 0);
 
-        Campeonato c = new Campeonato(nome, circuitosEscolhidos.stream().map(Corrida::new).collect(Collectors.toCollection(ArrayList::new)));
-        this.modelCampeonato.adicionarCampeonato(c);
+        //Campeonato c = new Campeonato(nome, circuitosEscolhidos.stream().map(Corrida::new).collect(Collectors.toCollection(ArrayList::new)));
+        //this.modelCampeonato.adicionarCampeonato(c);
     }
+
 }

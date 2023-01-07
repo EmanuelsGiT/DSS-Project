@@ -37,9 +37,27 @@ public class UtilizadorFacade implements IUtilizadores {
 
     @Override
     public boolean autenticaUtilizador(String nome, String pass) {
-        return true;
+        if (autenticaAdministrador(nome, pass))
+            return true;
+        else if (autenticaJogador(nome, pass))
+            return true;
+        return false;
     }
 
+    public boolean autenticaJogador(String nome, String pass) {
+        Registado rstd = registados.get(nome);
+        if (rstd != null) {
+            return rstd.getPass().equals(pass);
+        }
+        return false;
+    }
+    public boolean autenticaAdministrador(String nome, String pass) {
+        Administrador adm = administradores.get(nome);
+        if (adm != null) {
+            return adm.getPass().equals(pass);
+        }
+        return false;
+    }
     @Override
     public boolean utilizadorExiste(String nome) {
         if (utilizadores.containsKey(nome)) {

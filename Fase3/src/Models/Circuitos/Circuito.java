@@ -137,7 +137,7 @@ public class Circuito {
     }
 
     public int calcularNRetas(int nChicanes, int nCurvas) {
-        return nChicanes+nCurvas+1;
+        return nChicanes+nCurvas;
     }
 
     public Circuito clone() {
