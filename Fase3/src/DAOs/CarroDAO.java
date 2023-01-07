@@ -1,9 +1,11 @@
 package src.DAOs;
 
 import src.Models.Carros.*;
+import src.Models.Pilotos.Piloto;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +53,19 @@ public class CarroDAO implements Map<String, Carro> {
 
     @Override
     public boolean containsKey(Object key) {
-        return false;
+        boolean r=false;
+        try (Connection conn = DataBaseData.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT Modelo FROM carros WHERE Modelo= ?;");){
+            ps.setString(1, key.toString());
+            try (ResultSet rs = ps.executeQuery();) {
+                if (rs.next())
+                    r=true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
+        return r;
     }
 
     @Override
@@ -61,6 +75,39 @@ public class CarroDAO implements Map<String, Carro> {
 
     @Override
     public Carro get(Object key) {
+        try (Connection conn = DataBaseData.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT Modelo,Marca,Classe,Cilindrada,Potencia,Fiabilidade,Pac,PotenciaEletrica FROM carros WHERE Modelo= ?;");){
+            ps.setString(1,(String)key);
+            try (ResultSet rs = ps.executeQuery();){
+                if (rs.next()) {
+                    String modelo = rs.getString("Modelo");
+                    String marca = rs.getString("Marca");
+                    String classe = rs.getString("Classe");
+                    int cilindrada = rs.getInt("Cilindrada");
+                    int potencia = rs.getInt("Potencia");
+                    double fiabilidade = rs.getDouble("Fiabilidade");
+                    double pac = rs.getDouble("Pac");
+                    int potenciaEletrica = rs.getInt("PotenciaEletrica");
+                    int eHibrido = 1;
+                    if (rs.wasNull()) {
+                        eHibrido = 0;
+                    }
+
+                    if (classe.equals(C1.class.getSimpleName()))
+                        return new C1(marca, modelo, potencia, eHibrido, potenciaEletrica, pac);
+                    else if (classe.equals(C2.class.getSimpleName()))
+                        return new C2(marca, modelo, cilindrada, potencia, eHibrido, potenciaEletrica, pac);
+                    else if (classe.equals(GT.class.getSimpleName()))
+                        return new GT(marca, modelo, cilindrada, potencia, eHibrido, potenciaEletrica, pac);
+                    else if (classe.equals(SC.class.getSimpleName()))
+                        return new SC(marca, modelo, potencia, pac);
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
         return null;
     }
 
@@ -72,7 +119,7 @@ public class CarroDAO implements Map<String, Carro> {
 
             ps.setString(1, value.getMarca());
             ps.setString(2, value.getModelo());
-            ps.setString(3, value.getClass().getName());
+            ps.setString(3, value.getClass().getSimpleName());
             ps.setInt(4, value.getCilindrada());
             ps.setInt(5, value.getPotencia());
             ps.setDouble(6, value.getFiabilidade());
@@ -134,7 +181,20 @@ public class CarroDAO implements Map<String, Carro> {
 
     @Override
     public Collection<Carro> values() {
-        return null;
+        Collection<Carro> r = new HashSet<>();
+        try (
+                Connection conn = DataBaseData.getConnection();
+                Statement stm = conn.createStatement();
+                ResultSet rs = stm.executeQuery("SELECT Modelo FROM carros;");
+        ){
+            while(rs.next()) {
+                Carro c = this.get(rs.getString("Modelo"));
+                r.add(c);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return r;
     }
 
     @Override

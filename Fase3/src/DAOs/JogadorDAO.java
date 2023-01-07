@@ -3,10 +3,7 @@ package src.DAOs;
 import src.Models.Utilizadores.Jogador;
 import src.Models.Utilizadores.Registado;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -61,6 +58,22 @@ public class JogadorDAO implements Map<String, Jogador> {
 
     @Override
     public Jogador get(Object key) {
+        try (Connection conn = DataBaseData.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT Nome FROM jogadores WHERE Nome= ?;");){
+            ps.setString(1,(String)key);
+            try (ResultSet rs = ps.executeQuery();){
+                if (rs.next()) {
+                    String nome = rs.getString("Nome");
+                    if (RegistadoDAO.getInstance().containsKey(nome))
+                        return RegistadoDAO.getInstance().get(nome);
+                    else
+                        return AnonimoDAO.getInstance().get(nome);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
         return null;
     }
 

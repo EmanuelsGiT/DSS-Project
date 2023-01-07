@@ -65,4 +65,8 @@ public class UtilizadorFacade implements IUtilizadores {
         }
         return false;
     }
+
+    public boolean registadoExiste(String nome) {
+        return registados.containsKey(nome);
+    }
 }

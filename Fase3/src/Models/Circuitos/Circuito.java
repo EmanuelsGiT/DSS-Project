@@ -2,7 +2,7 @@ package src.Models.Circuitos;
 import java.util.ArrayList;
 
 public class Circuito {
-    
+
     public enum GDU {
         POSSIVEL (0),
         DIFICIL (1),
@@ -89,6 +89,7 @@ public class Circuito {
         this.retasGDU = new ArrayList<>(circuito.getRetasGDU());
         this.curvasGDU = new ArrayList<>(circuito.getCurvasGDU());
     }
+
 
     public String getNome(){
         return this.nome;

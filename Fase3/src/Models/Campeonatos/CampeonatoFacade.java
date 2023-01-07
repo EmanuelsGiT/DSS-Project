@@ -1,9 +1,11 @@
 package src.Models.Campeonatos;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import src.DAOs.CampeonatoDAO;
+import src.DAOs.JogadorDAO;
 import src.Models.Campeonatos.CarroSetup;
 import src.Models.Campeonatos.CarroSetup.ModoMotor;
 import src.Models.Campeonatos.CarroSetup.Pneus;
@@ -35,6 +37,16 @@ public class CampeonatoFacade implements ICampeonatos {
      @Override
      public void adicionarCampeonato(Campeonato campeonato) {
           this.campeonatos.put(campeonato.getNome(), campeonato);
+     }
+
+     public Collection<Campeonato> getCampeonatos() {
+         return this.campeonatos.values();
+     }
+
+    @Override
+    public void registaJogador(String nomeJogador, String nomeCampeonato, Piloto piloto, Carro carro) {
+         Registo registo = new Registo(3, piloto, JogadorDAO.getInstance().get(nomeJogador), new CarroSetup(carro));
+         CampeonatoDAO.getInstance().putRegisto(nomeCampeonato, registo);
      }
     /**
      @Override

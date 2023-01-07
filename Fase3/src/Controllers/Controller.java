@@ -3,6 +3,7 @@ package src.Controllers;
 import UI.Menu;
 
 import src.DAOs.CampeonatoDAO;
+import src.DAOs.UtilizadorDAO;
 import src.Main;
 import src.Models.Campeonatos.Campeonato;
 import src.Models.Campeonatos.CampeonatoFacade;
@@ -12,15 +13,14 @@ import src.Models.Carros.*;
 import src.Models.Circuitos.Circuito;
 import src.Models.Circuitos.CircuitoFacade;
 import src.Models.Circuitos.ICircuitos;
+import src.Models.Pilotos.IPilotos;
+import src.Models.Pilotos.Piloto;
+import src.Models.Pilotos.PilotoFacade;
 import src.Models.Utilizadores.*;
-import src.Views.CircuitoView;
-import src.Views.UtilizadorView;
+import src.Views.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Controller {
@@ -30,9 +30,15 @@ public class Controller {
     private final ICircuitos modelCircuto;
     private final ICampeonatos modelCampeonato;
     private final ICarros modelCarro;
+    private final IPilotos modelPiloto;
     // View
     private final UtilizadorView viewUtilizador;
     private final CircuitoView viewCircuito;
+    private final CampeonatoView viewCampeonato;
+    private final PilotoView viewPiloto;
+    private final CarroView viewCarro;
+
+    private String nomeUtilizador = null;
     // Scanner
     private static final Scanner sc = new Scanner(System.in);
 
@@ -41,10 +47,13 @@ public class Controller {
         this.modelCircuto = new CircuitoFacade();
         this.modelCampeonato = new CampeonatoFacade();
         this.modelCarro = new CarroFacade();
+        this.modelPiloto = new PilotoFacade();
 
         this.viewUtilizador = new UtilizadorView();
         this.viewCircuito = new CircuitoView();
-
+        this.viewCampeonato = new CampeonatoView();
+        this.viewPiloto = new PilotoView();
+        this.viewCarro = new CarroView();
     }
 
     public void run() throws Exception {
@@ -81,6 +90,7 @@ public class Controller {
             String[] credenciais = Menu.lerCredenciais();
             if (this.modelUtilizador.autenticaAdministrador(credenciais[0], credenciais[1])) {
                 System.out.println("Autenticado com Sucesso");
+                this.nomeUtilizador = credenciais[0];
                 this.menuPrincipalAdmin();
             }
             else {
@@ -91,6 +101,7 @@ public class Controller {
             String[] credenciais = Menu.lerCredenciais();
             if (this.modelUtilizador.autenticaJogador(credenciais[0], credenciais[1])) {
                 System.out.println("Autenticado com Sucesso");
+                this.nomeUtilizador = credenciais[0];
                 this.menuPrincipalJogador();
             }
             else {
@@ -101,9 +112,13 @@ public class Controller {
         menuTipoLogin.setHandler(3, () -> {
             String nome = Menu.lerNome();
             Utilizador u = new Anonimo(nome);
-            this.modelUtilizador.registaUtilizador(u);
-            this.viewUtilizador.autenticarSucesso(u);
-            this.menuPrincipalJogador();
+            if (!this.modelUtilizador.registadoExiste(nome)) {
+                this.modelUtilizador.registaUtilizador(u);
+                this.viewUtilizador.autenticarSucesso(u);
+                this.menuPrincipalJogador();
+            } else {
+                this.viewUtilizador.utilizadorJaRegistado();
+            }
         });
 
         menuTipoLogin.run();
@@ -115,15 +130,66 @@ public class Controller {
         menuInicial.setPreCondition(1, this.modelCircuto::existeCircuitos);
         menuInicial.setHandler(2, this::adicionarCircuito);
         menuInicial.setHandler(3, this::adicionarCarro);
-
+        menuInicial.setHandler(4, this::adicionarPiloto);
         menuInicial.run();
     }
 
-    public void menuPrincipalJogador() throws Exception {
-        Menu menuInicial = new Menu("Menu Principal", new String[] {"Preparar Corrida", "Registar Campeonato", "Consultar Classificacao Campeonato", "Consultar Classificacao Corrida"});
+    private void adicionarPiloto() {
+        String nome = Menu.lerLinha("Nome do piloto: ");
+        double cts = Menu.lerDouble("Grau de Pericia CTS (Chuva vs Tempo Seco): ", 0, 1);
+        double sva = Menu.lerDouble("Grau de SVA (Seguranca vs agressividade):", 0, 1);
 
+        Piloto p = new Piloto(nome, sva, cts);
+        this.modelPiloto.adicionarPiloto(p);
+        System.out.println("Piloto adicionado com sucesso!");
+
+
+    }
+
+    public void menuPrincipalJogador() throws Exception {
+        Menu menuInicial = new Menu("Menu Principal", new String[] {"Registar Campeonato", "Preparar Corrida", "Consultar Classificacao Campeonato", "Consultar Classificacao Corrida"});
+        menuInicial.setHandler(1, this::registarNumCampeonato);
         menuInicial.run();
 
+    }
+
+    private void registarNumCampeonato() throws IOException {
+        ArrayList<Campeonato> campeonatos = new ArrayList<>(this.modelCampeonato.getCampeonatos());
+
+        int op;
+        do {
+            this.viewCampeonato.apresentarCampeonatos(campeonatos);
+            op = Menu.readOption(campeonatos.size());
+            if (op > 0 && op < campeonatos.size()+1) {
+                Piloto piloto = this.escolherPiloto();
+                Carro carro = this.escolherCarro();
+                System.out.println("\n\n\n\n\n--- Opcoes Escolhidas ---");
+                System.out.println(piloto);
+                System.out.println(carro);
+                this.modelCampeonato.registaJogador(nomeUtilizador, campeonatos.get(op-1).getNome(), piloto, carro);
+                System.out.println("Jogador registado com sucesso!");
+            }
+        } while (op != 0);
+    }
+
+    private Carro escolherCarro() {
+        ArrayList<Carro> carros = new ArrayList<>(this.modelCarro.getCarros());
+        int op;
+        do {
+            this.viewCarro.apresentarCarros(carros);
+            op = Menu.readOption(carros.size());
+        } while (op < 1 || op > carros.size());
+        return carros.get(op-1);
+    }
+
+    private Piloto escolherPiloto() {
+        ArrayList<Piloto> pilotos = new ArrayList<>(this.modelPiloto.getPilotos());
+        int op;
+        do {
+            this.viewPiloto.apresentarPilotos(pilotos);
+            op = Menu.readOption(pilotos.size());
+        } while (op < 1 || op > pilotos.size());
+        return pilotos.get(op-1);
     }
 
     private void adicionarCarro() throws Exception {
@@ -140,6 +206,10 @@ public class Controller {
         Carro carro = null;
         String marca = Menu.lerLinha("Marca do carro: ");
         String modelo = Menu.lerLinha("Modelo do carro: ");
+        if (this.modelCarro.existeCarro(modelo)) {
+            System.out.println("Ja existe um carro com este nome!");
+            return;
+        }
         int potencia = Menu.lerInt("Potencia do carro: ");
 
         int cilindrada = 0;
@@ -184,7 +254,7 @@ public class Controller {
         String nome = Menu.lerLinha("Nome do circuito: ");
         if (this.modelCircuto.existeCircuito(nome)) {
             System.out.println("Ja existe um circuito com este nome, por favor insira outro nome!");
-            adicionarCircuito();
+            return;
         }
         Double distancia = Menu.lerDouble("Distancia do circuito: ");
         int nCurvas = Menu.lerInt("Numero de curvas: ");
@@ -236,7 +306,7 @@ public class Controller {
         do {
             this.viewCircuito.apresentarCircuitos(circuitos);
             op = Menu.readOption(circuitos.size());
-            if (op > 0) {
+            if (op > 0 && op < circuitos.size()) {
                 circuitosEscolhidos.add(circuitos.get(op-1));
                 circuitos.remove(op-1);
             }

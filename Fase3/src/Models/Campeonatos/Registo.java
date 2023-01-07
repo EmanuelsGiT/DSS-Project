@@ -10,12 +10,14 @@ public class Registo {
     /**
      * Variáveis de instância
      */
+    private Integer id;
     private int numAfinacoes;
     private Piloto piloto;
     private Jogador jogador;
     private CarroSetup carroSetup;
 
     public Registo() {
+        this.id = null;
         this.numAfinacoes = 0;
         this.piloto = new Piloto();
         this.jogador = null;
@@ -23,17 +25,33 @@ public class Registo {
     }
 
     public Registo(int numAfinacoes, Piloto piloto, Jogador jogador, CarroSetup carroSetup) {
+        this.id = null;
         this.numAfinacoes = numAfinacoes;
         this.piloto = piloto.clone();
         this.jogador = jogador.clone();
         this.carroSetup = carroSetup.clone();
     }
-
+    public Registo(int id, int numAfinacoes, Piloto piloto, Jogador jogador, CarroSetup carroSetup) {
+        this.id = id;
+        this.numAfinacoes = numAfinacoes;
+        this.piloto = piloto.clone();
+        this.jogador = jogador.clone();
+        this.carroSetup = carroSetup.clone();
+    }
     public Registo(Registo registo) {
+        this.id = registo.getId();
         this.numAfinacoes = registo.numAfinacoes;
         this.piloto = registo.getPiloto();
         this.jogador = registo.getJogador();
         this.carroSetup = registo.getCarroSetup();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public int getNumAfinacoes() {

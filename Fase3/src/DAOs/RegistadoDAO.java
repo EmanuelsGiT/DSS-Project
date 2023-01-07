@@ -45,7 +45,19 @@ public class RegistadoDAO implements Map<String, Registado> {
 
     @Override
     public boolean containsKey(Object key) {
-        return false;
+        boolean r=false;
+        try (Connection conn = DataBaseData.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT Nome FROM registados WHERE Nome= ?;");){
+            ps.setString(1, key.toString());
+            try (ResultSet rs = ps.executeQuery();) {
+                if (rs.next())
+                    r=true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
+        return r;
     }
 
     @Override
@@ -56,13 +68,14 @@ public class RegistadoDAO implements Map<String, Registado> {
     @Override
     public Registado get(Object key) {
         try (Connection conn = DataBaseData.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT Nome,PalavraPasse FROM registados WHERE Nome= ?;");){
+             PreparedStatement ps = conn.prepareStatement("SELECT Nome,PalavraPasse,PontuacaoTotal FROM registados WHERE Nome= ?;");){
             ps.setString(1,(String)key);
             try (ResultSet rs = ps.executeQuery();){
                 if (rs.next())
                     return new Registado(
                             rs.getString("Nome"),
-                            rs.getString("PalavraPasse")
+                            rs.getString("PalavraPasse"),
+                            rs.getInt("PontuacaoTotal")
                     );
             }
         } catch (SQLException e) {

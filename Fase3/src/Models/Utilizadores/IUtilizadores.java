@@ -11,6 +11,7 @@ public interface IUtilizadores {
     public boolean autenticaAdministrador(String nome, String pass);
 
     public boolean utilizadorExiste(String nome);
+    public boolean registadoExiste(String nome);
 
 }
 

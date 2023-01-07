@@ -183,7 +183,7 @@ public class CircuitoDAO implements Map<String, Circuito> {
 
     @Override
     public Collection<Circuito> values() {
-        Collection<Circuito> r = new HashSet<Circuito>();
+        Collection<Circuito> r = new HashSet<>();
         try (
                 Connection conn = DataBaseData.getConnection();
                 Statement stm = conn.createStatement();

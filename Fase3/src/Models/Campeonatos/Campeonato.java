@@ -154,17 +154,17 @@ public class Campeonato {
         Corrida c = getCorridas().get(corrida);
     }
 
-
+     **/
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n - Campeonato -");
         sb.append("\nNome: ");sb.append(this.nome);
         sb.append("\nCorridas: ");sb.append(this.getCorridas());
-        sb.append("\nRegistos: ");sb.append(this.getRegistos());
+       // sb.append("\nRegistos: ");sb.append(this.getRegistos());
         return sb.toString();
     }
-     **/
+
 
 
 
