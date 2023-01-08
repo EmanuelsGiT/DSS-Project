@@ -20,7 +20,7 @@ public class Main {
 
         //uDAO.clear();
         //cDAO.clear();
-        carroDAO.clear();
+        //carroDAO.clear();
 
         Controller controller = new Controller();
         controller.run();

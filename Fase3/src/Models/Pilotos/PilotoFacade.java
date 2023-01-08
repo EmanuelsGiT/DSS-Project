@@ -1,8 +1,10 @@
 package src.Models.Pilotos;
 
+import java.util.Collection;
 import java.util.Map;
 
 //import src.DAOsExclude.PilotoDAO;
+import src.DAOs.PilotoDAO;
 import src.Models.Pilotos.IPilotos;
 import src.Models.Pilotos.Piloto;
 
@@ -13,21 +15,16 @@ public class PilotoFacade implements IPilotos {
      */
     private Map<String, Piloto> pilotos;
 
-    /*
+
     public PilotoFacade() {
         this.pilotos = PilotoDAO.getInstance();
-    }*/
+    }
 
     public void adicionarPiloto(Piloto piloto) {
         this.pilotos.put(piloto.getNome(), piloto);
     }
 
-    public void adicionarPiloto(String nome, double cts, double sva) {
-        adicionarPiloto(new Piloto(nome, sva, cts));
+    public Collection<Piloto> getPilotos() {
+        return this.pilotos.values();
     }
-
-    public void removerPiloto(String nome) {
-        this.pilotos.remove(nome);
-    }
-
 }

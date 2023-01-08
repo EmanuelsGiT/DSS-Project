@@ -45,7 +45,19 @@ public class RegistadoDAO implements Map<String, Registado> {
 
     @Override
     public boolean containsKey(Object key) {
-        return false;
+        boolean r=false;
+        try (Connection conn = DataBaseData.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT Nome FROM registados WHERE Nome= ?;");){
+            ps.setString(1, key.toString());
+            try (ResultSet rs = ps.executeQuery();) {
+                if (rs.next())
+                    r=true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
+        return r;
     }
 
     @Override

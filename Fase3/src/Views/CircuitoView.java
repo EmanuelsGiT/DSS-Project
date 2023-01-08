@@ -9,7 +9,7 @@ public class CircuitoView {
     public void apresentarCircuitos(ArrayList<Circuito> circuitos) {
         System.out.println("Circuitos Disponiveis: ");
         for (int i = 0; i < circuitos.size(); i++) {
-            System.out.println("[" + (i+1) + "]: ");
+            System.out.println("-- Opcao [" + (i+1) + "] -- ");
             System.out.println(circuitos.get(i));
         }
     }

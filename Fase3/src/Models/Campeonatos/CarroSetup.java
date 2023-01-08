@@ -20,19 +20,30 @@ public class CarroSetup {
     /**
      * Variáveis de instância
      */
+    private Integer id;
     private double pac;
     private Pneus pneus;
     private ModoMotor modoMotor;
     private Carro carro;
 
     public CarroSetup(double pac, Pneus pneus, ModoMotor modoMotor, Carro carro) {
+        this.id = null;
         this.pac = pac;
         this.pneus = pneus;
         this.modoMotor = modoMotor;
         this.carro = carro.clone(); 
     }
+
+    public CarroSetup(int id, double pac, Pneus pneus, ModoMotor modoMotor, Carro carro) {
+        this.id = id;
+        this.pac = pac;
+        this.pneus = pneus;
+        this.modoMotor = modoMotor;
+        this.carro = carro.clone();
+    }
     
     public CarroSetup(Carro carro) {
+        this.id = null;
         this.pac = 0;
         this.pneus = null;
         this.modoMotor = null;
@@ -40,10 +51,19 @@ public class CarroSetup {
     }
 
     public CarroSetup(CarroSetup carroSetup) {
+        this.id = carroSetup.id;
         this.pac = carroSetup.pac;
         this.pneus = carroSetup.pneus;
         this.modoMotor = carroSetup.modoMotor;
         this.carro = carroSetup.getCarro();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public double getPac() {

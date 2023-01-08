@@ -1,5 +1,6 @@
 package src.Models.Campeonatos;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +37,15 @@ public class CampeonatoFacade implements ICampeonatos {
      public void adicionarCampeonato(Campeonato campeonato) {
           this.campeonatos.put(campeonato.getNome(), campeonato);
      }
+
+     public Collection<Campeonato> getCampeonatos() {
+         return this.campeonatos.values();
+     }
+
+    @Override
+    public void registaJogador(String nomeJogador, String nomeCampeonato, Piloto piloto, Carro carro) {
+
+    }
     /**
      @Override
      // campeonatoNaoExistenteException

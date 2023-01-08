@@ -1,6 +1,9 @@
 package src.Models.Campeonatos;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.stream.Collectors;
 
 import src.Models.Circuitos.Circuito;
 
@@ -14,6 +17,7 @@ public class Corrida {
     /**
      * Variáveis de instância
      */
+    private Integer id;
     private Circuito circuito;
     private Clima clima;
     private HashMap<String, Integer> resultados; // key: nome do jogador; value: resultado da corrida
@@ -23,15 +27,19 @@ public class Corrida {
      * Construtor vazio/não parameterizado
      */
     public Corrida() {
+        this.id = null;
         this.circuito = new Circuito();
         this.clima = Clima.SECO;
         this.resultados = new HashMap<>();
+        this.jogadoresProntos = new HashMap<>();
     }
 
     public Corrida(Circuito circuito) {
+        this.id = null;
         this.circuito = circuito.clone();
         this.clima = Clima.SECO;
         this.resultados = new HashMap<>();
+        this.jogadoresProntos = new HashMap<>();
     }
 
     /**
@@ -44,16 +52,57 @@ public class Corrida {
         this.circuito = circuito.clone();
         this.clima = clima;
         this.resultados = new HashMap<>(resultados);
+        this.jogadoresProntos = new HashMap<>();
+    }
+    /**
+     * Contrutor não parameterizado
+     * @param id
+     * @param circuito
+     * @param clima
+     * @param resultados
+     */
+    public Corrida(int id, Circuito circuito, Clima clima, HashMap<String, Integer> resultados) {
+        this.id = id;
+        this.circuito = circuito.clone();
+        this.clima = clima;
+        this.resultados = new HashMap<>(resultados);
+        this.jogadoresProntos = new HashMap<>();
+
     }
 
+    /**
+     * Contrutor não parameterizado
+     * @param id
+     * @param circuito
+     * @param clima
+     * @param resultados
+     */
+    public Corrida(int id, Circuito circuito, Clima clima, HashMap<String, Integer> resultados, HashMap<String, Boolean> jogadoresProntos) {
+        this.id = id;
+        this.circuito = circuito.clone();
+        this.clima = clima;
+        this.resultados = new HashMap<>(resultados);
+        this.jogadoresProntos = new HashMap<>(jogadoresProntos);
+
+    }
     /**
      * Construtor de cópia
      * @param corrida
      */
     public Corrida(Corrida corrida) {
+        this.id = corrida.id;
         this.circuito = corrida.getCircuito();
         this.clima = corrida.clima;
         this.resultados = corrida.getResultados();
+        this.jogadoresProntos = corrida.getJogadoresProntos();
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public Circuito getCircuito() {
@@ -67,7 +116,9 @@ public class Corrida {
     public HashMap<String, Integer> getResultados() {
         return new HashMap<>(this.resultados);
     }
-
+    public HashMap<String, Boolean> getJogadoresProntos() {
+        return new HashMap<>(this.jogadoresProntos);
+    }
     public void setCircuito(Circuito circuito) {
         this.circuito = circuito.clone();
     }
@@ -100,6 +151,8 @@ public class Corrida {
         int voltas = this.circuito.getNVoltas();
         
     }
+
+
 
     @Override
     public String toString() {
